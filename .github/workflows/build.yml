@@ -27,5 +27,5 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn clean package -Dmule.env=dev -Dmule.key=mysecretkey
+    - name: test with Maven
+      run: mvn clean test -Dmule.env=dev -Dmule.key=mysecretkey
