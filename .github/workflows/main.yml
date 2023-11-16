@@ -1,0 +1,11 @@
+name: Main Configuration file for orchestration of pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  Build-And-Publish:
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
