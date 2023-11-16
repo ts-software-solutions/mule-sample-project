@@ -21,9 +21,9 @@ jobs:
         distribution: 'temurin'
         #cache: maven
     - name: Configure Maven settings
-      uses: whelk-io/maven-settings-xml-action@v18
+      uses: s4u/maven-settings-action@v2.8.0
       with:
-        servers: >
+        servers: |
           [
             {
               "id": "anypoint-exchange-v3",
@@ -34,15 +34,11 @@ jobs:
               "id": "avio-releases",
               "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
               "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
-            }
-          ]
-        mirrors: >
-          [
+            },
             {
-              "id": "avio-releases",
-              "name": "avio-releases",
-              "mirrorOf": "mulesoft-releases",
-              "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-releases/"
+              "id": "avio-snapshots",
+              "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
+              "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
             }
           ]
    
