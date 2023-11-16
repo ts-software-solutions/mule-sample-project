@@ -1,7 +1,10 @@
 name: Test and build Jar File 
 
 on:
-  workflow_call:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-and-publish:
@@ -14,7 +17,7 @@ jobs:
       with:
         java-version: '8'
         distribution: 'temurin'
-        #cache: maven
+        cache: maven
     - name: Configure Maven settings
       uses: whelk-io/maven-settings-xml-action@v18
       with:
