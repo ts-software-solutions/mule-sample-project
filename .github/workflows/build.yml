@@ -33,7 +33,7 @@ jobs:
             {
               "id": "avio-mulesoft-ee-releases",
               "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
-              "password": "${{ secrets.MULE_EE_REPO_PASSSWORD }}"
+              "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
             }
           ]
         mirrors: |
