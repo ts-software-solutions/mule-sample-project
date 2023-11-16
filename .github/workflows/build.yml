@@ -21,9 +21,9 @@ jobs:
         distribution: 'temurin'
         #cache: maven
     - name: Configure Maven settings
-      uses: s4u/maven-settings-action@v2.8.0
+      uses: whelk-io/maven-settings-xml-action@v18
       with:
-        servers: |
+        servers: >
           [
             {
               "id": "anypoint-exchange-v3",
@@ -36,7 +36,7 @@ jobs:
               "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
             }
           ]
-        mirrors: |
+        mirrors: >
           [
             {
               "id": "avio-releases",
