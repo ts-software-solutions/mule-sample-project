@@ -39,7 +39,7 @@ jobs:
               "id": "avio-snapshots",
               "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
               "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
-            }
+            },
             {
               "id": "avio-mulesoft-ee-releases",
               "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
