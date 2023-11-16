@@ -2,6 +2,17 @@ name: Test and build Jar File
 
 on:
   workflow_call:
+    secrets:
+      MULE_DEV_CRYPTO_KEY: 
+        required: true
+      MULE_EE_REPO_USERNAME: 
+        required: true
+      MULE_EE_REPO_PASSWORD: 
+        required: true
+      MULE_CLIENT_ID: 
+        required: true
+      MULE_CLIENT_SECRET: 
+        required: true
 
 jobs:
   build-and-publish:
