@@ -21,9 +21,9 @@ jobs:
         distribution: 'temurin'
         #cache: maven
     - name: Configure Maven settings
-      uses: s4u/maven-settings-action@v2.8.0
+      uses: whelk-io/maven-settings-xml-action@v18
       with:
-        servers: |
+        servers: >
           [
             {
               "id": "anypoint-exchange-v3",
@@ -36,15 +36,38 @@ jobs:
               "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
             }
           ]
-        mirrors: |
+        mirrors: >
           [
             {
               "id": "avio-mulesoft-ee-releases",
               "name": "avio-mulesoft-ee-releases",
-              "mirrorOf": "mule-repository",
+              "mirrorOf": "MuleRepository",
               "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-ee-releases/"
             }
           ]
-   
+        profiles: >
+          [
+            {
+              "id": "Mule",
+              "repositories": [
+                 {
+                    "id": "MuleRepository",
+                    "name": "MuleRepository",
+                    "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
+                    "releases": {
+                      "enabled": "true"
+                    },
+                    "snapshots": {
+                      "enabled": "false"
+                    }
+                 } 
+              ]
+            }
+          ]
+        active_profiles: >
+          [
+            "Mule"
+          ]
+        output_file: .m2/settings.xml
     - name: test with Maven
       run: mvn clean test -e -U -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
