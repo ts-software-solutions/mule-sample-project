@@ -1,12 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Java CI with Maven
+name: Test and build Jar File 
 
 on:
   push:
@@ -21,11 +13,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+   
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
+    - name: Configure Maven settings
+      uses: s4u/maven-settings-action@v2.8.0
+      with:
+        servers: |
+          [{
+              "id": "anypoint-exchange-v3",
+              "username": "Client",
+              "password": "${{ secrets.MULE_CLIENT_ID }}~?~${{ secrets.MULE_CLIENT_SECRET }}"
+          }]
+   
     - name: test with Maven
-      run: mvn clean test -Dmule.env=dev -Dmule.key=mysecretkey
+      run: mvn clean test -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
