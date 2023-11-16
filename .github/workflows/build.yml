@@ -66,3 +66,10 @@ jobs:
         output_file: .m2/settings.xml
     - name: Test and Build Jar
       run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
+    - name: Upload Jar and Pom.xml
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-artifacts
+        path: |
+          target/*.jar
+          pom.xml
