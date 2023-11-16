@@ -45,32 +45,27 @@ jobs:
               "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-ee-releases/"
             }
           ]
-        profiles: >
+        repositories: >
           [
-            {
-              "id": "Mule",
-              "repositories": [
-                 {
-                    "id": "MuleRepository",
-                    "name": "MuleRepository",
-                    "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
-                    "releases": {
-                      "enabled": "true"
-                    },
-                    "snapshots": {
-                      "enabled": "false"
-                    }
-                 } 
-              ]
+            { 
+              "id": "MuleRepository", 
+              "name": "MuleRepository", 
+              "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/", 
+              "releases": { 
+                "enabled": "true" 
+              }, 
+              "snapshots": { 
+                "enabled": "true" 
+              } 
             }
           ]
         active_profiles: >
           [
-            "Mule"
+            "github"
           ]
         output_file: .m2/settings.xml
     - name: Display settings.xml contents
       run: cat ./.m2/settings.xml
       shell: bash
     - name: test with Maven
-      run: mvn clean test -e -U -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
+      run: mvn clean test -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
