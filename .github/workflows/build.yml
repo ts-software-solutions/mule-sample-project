@@ -29,20 +29,6 @@ jobs:
               "id": "anypoint-exchange-v3",
               "username": "~~~Token~~~",
               "password": "${{ secrets.TS_TOKEN }}"
-            },
-            {
-              "id": "avio-releases",
-              "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
-              "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
-            }
-          ]
-        mirrors: |
-          [
-            {
-              "id": "avio-releases",
-              "name": "avio-releases",
-              "mirrorOf": "mulesoft-releases",
-              "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-releases/"
             }
           ]
    
