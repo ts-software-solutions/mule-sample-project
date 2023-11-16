@@ -126,6 +126,12 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+			<id>avio-mulesoft-ee-releases</id>
+			<name>AVIO MuleEE Releases Repository</name>
+			<url>https://devops.avioconsulting.com/nexus/repository/mulesoft-ee-releases/</url>
+			<layout>default</layout>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
