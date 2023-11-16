@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:avio-logger="http://www.mulesoft.org/schema/mule/avio-logger"
-	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+<mule xmlns:avio-core="http://www.mulesoft.org/schema/mule/avio-core"
+	xmlns:avio-logger="http://www.mulesoft.org/schema/mule/avio-logger"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
-http://www.mulesoft.org/schema/mule/avio-logger http://www.mulesoft.org/schema/mule/avio-logger/current/mule-avio-logger.xsd">
+http://www.mulesoft.org/schema/mule/avio-logger http://www.mulesoft.org/schema/mule/avio-logger/current/mule-avio-logger.xsd
+http://www.mulesoft.org/schema/mule/avio-core http://www.mulesoft.org/schema/mule/avio-core/current/mule-avio-core.xsd">
 
 	<!-- Listener Config -->
     <http:listener-config name="hello-world-httpListenerConfig">
@@ -23,7 +24,7 @@ http://www.mulesoft.org/schema/mule/avio-logger http://www.mulesoft.org/schema/m
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="09b3fc63-1c31-41cd-90eb-4696c10cce9f" file="${mule.env}-properties.yaml" />
-	<avio-logger:config name="AVIO_Logger_Config" doc:name="AVIO Logger Config" doc:id="ae6f64a9-ba15-480e-87b8-4baacd407dfe" environment="#[p('mule.env')]" defaultCategory="com.tannersherman.api" applicationVersion="v1"/>	
+	<avio-core:config name="AVIO_Core_Config" doc:name="AVIO Core Config" doc:id="b12cd677-44dc-42f8-8751-f034edeb9f02" app_name="#[app.name]" app_version="v1" env="${mule.env}" />	
 
 
 </mule>

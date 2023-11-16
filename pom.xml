@@ -61,9 +61,9 @@
 
 	<dependencies>
 		<dependency>
-		  <groupId>26d53683-6746-4040-ad07-f671f8e2b27e</groupId>
-		  <artifactId>mule-custom-logger</artifactId>
-		  <version>2.0.1</version>
+		  <groupId>f2ea2cb4-c600-4bb5-88e8-e952ff5591ee</groupId>
+		  <artifactId>my-custom-logger</artifactId>
+		  <version>4.0.0</version>
 		  <classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>

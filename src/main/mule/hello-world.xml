@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:avio-logger="http://www.mulesoft.org/schema/mule/avio-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
-http://www.mulesoft.org/schema/mule/avio-logger http://www.mulesoft.org/schema/mule/avio-logger/current/mule-avio-logger.xsd">
+<mule xmlns:avio-core="http://www.mulesoft.org/schema/mule/avio-core" xmlns:avio-logger="http://www.mulesoft.org/schema/mule/avio-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/avio-logger http://www.mulesoft.org/schema/mule/avio-logger/current/mule-avio-logger.xsd
+http://www.mulesoft.org/schema/mule/avio-core http://www.mulesoft.org/schema/mule/avio-core/current/mule-avio-core.xsd">
     <flow name="hello-world-main">
         <http:listener config-ref="hello-world-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -121,8 +122,8 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\helloworld:hello-world-config">
-        <avio-logger:log doc:name="Log Payload (or lack thereof)" doc:id="e9f4bf0c-598e-4b5a-8f09-711c9be9818c" config-ref="AVIO_Logger_Config" correlationId="#[correlationId]" message="I'm just using this as an example so my app needs to authenticate to AVIO Exchange" payload="#[payload]" categorySuffix="hello-world"/>
-		<ee:transform doc:name="Transform Message">
+		<avio-core:custom-logger doc:name="log payload (or lack thereof)" doc:id="7d19d142-d0a4-4e85-ac45-13740eaccc03" config-ref="AVIO_Core_Config" correlation_id="#[correlationId]" message='#["this is just a test to have to authenticate to AVIO exchange"]' payload="#[payload]" category="com.tannersherman.mule"/>
+		<ee:transform doc:name="set payload">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
