@@ -35,16 +35,7 @@ jobs:
               "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
               "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
             }
-          ]
-        mirrors: |
-          [
-            {
-              "id": "avio-mulesoft-ee-releases",
-              "name": "avio-mulesoft-ee-releases",
-              "mirrorOf": "mulesoft-releases",
-              "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-ee-releases/"
-            }
-          ]
+          }
    
     - name: test with Maven
       run: mvn clean test -e -U -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
