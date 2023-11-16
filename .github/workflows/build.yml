@@ -26,8 +26,8 @@ jobs:
         servers: |
           [{
               "id": "anypoint-exchange-v3",
-              "username": "~~~Client~~~",
-              "password": "${{ secrets.MULE_CLIENT_ID }}~?~${{ secrets.MULE_CLIENT_SECRET }}"
+              "username": "~~~Token~~~",
+              "password": "${{ secrets.TS_TOKEN }}"
           }]
    
     - name: test with Maven
