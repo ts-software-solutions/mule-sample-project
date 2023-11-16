@@ -70,4 +70,4 @@ jobs:
           ]
         output_file: .m2/settings.xml
     - name: test with Maven
-      run: mvn clean test -e -U -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
+      run: mvn clean test -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} 
