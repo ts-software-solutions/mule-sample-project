@@ -15,6 +15,11 @@
 		<app.runtime>4.4.0-20230320</app.runtime>
 		<mule.maven.plugin.version>3.8.2</mule.maven.plugin.version>
 		<munit.version>2.3.14</munit.version>
+		<muleApplicationName>${project.artifactId}-v1-${mule.env}</muleApplicationName>
+		<artifactPath>dummy</artifactPath>
+		<mule.key>dummy</mule.key>
+        <connectedAppClientId>dummy</connectedAppClientId>
+        <connectedAppClientSecret>dummy</connectedAppClientSecret>
 	</properties>
 
 	<build>
@@ -31,6 +36,24 @@
 				<extensions>true</extensions>
 				<configuration>
 					<classifier>mule-application</classifier>
+				    <cloudHubDeployment>
+				      <uri>https://anypoint.mulesoft.com</uri>
+				      <muleVersion>${app.runtime}</muleVersion>
+				      <businessGroup>AVIO Sandbox</businessGroup>
+			          <connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
+			          <connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
+			          <connectedAppGrantType>client_credentials</connectedAppGrantType>
+				      <applicationName>${muleApplicationName}</applicationName>
+				      <artifact>${artifactPath}</artifact>
+				      <environment>${environment}</environment>
+				      <region>${region}</region>
+				      <workers>${workers}</workers>
+				      <workerType>${workerType}</workerType>
+					  <properties>
+					  	<mule.env>${mule.env}</mule.env>
+					  	<mule.key>${mule.key}</mule.key>
+					  </properties>
+				    </cloudHubDeployment>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -58,6 +81,19 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<mule.env>dev</mule.env>
+				<workers>1</workers>
+				<workerSize>MICRO</workerSize>
+				<region>us-east-2</region>
+				<environment>DEV</environment>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>

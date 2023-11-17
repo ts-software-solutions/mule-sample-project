@@ -2,6 +2,13 @@ name: Deploy to Dev
 
 on:
   workflow_call:
+    secrets:
+      MULE_DEV_CRYPTO_KEY: 
+        required: true
+      MULE_CLIENT_ID: 
+        required: true
+      MULE_CLIENT_SECRET: 
+        required: true
 
 jobs:
   deploy-to-dev:
@@ -16,5 +23,10 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-    - name: Display structure of downloaded files
-      run: ls -R
+    - name: Get Jar File
+      run: |
+        echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
+      id: file_name
+
+    - name: Deploy to dev
+      run: mvn mule:deploy -e -P dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
