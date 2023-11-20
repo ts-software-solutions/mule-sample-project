@@ -1,8 +1,6 @@
 name: Main Configuration file for orchestration of pipeline
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
