@@ -9,22 +9,16 @@ on:
 jobs:
   Build-And-Publish:
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
-    secrets: 
-      MULE_DEV_CRYPTO_KEY: ${{ secrets.MULE_DEV_CRYPTO_KEY }}
-      MULE_EE_REPO_USERNAME: ${{ secrets.MULE_EE_REPO_USERNAME }}
-      MULE_EE_REPO_PASSWORD: ${{ secrets.MULE_EE_REPO_PASSWORD }}
-      MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
-      MULE_CLIENT_SECRET: ${{ secrets.MULE_CLIENT_SECRET }}
+    secrets: inherit
   
 
   Deploy-to-Dev:
     needs: Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy-to-dev.yml@main
-    secrets: 
-      MULE_DEV_CRYPTO_KEY: ${{ secrets.MULE_DEV_CRYPTO_KEY }}
-      MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
-      MULE_CLIENT_SECRET: ${{ secrets.MULE_CLIENT_SECRET }}
+    secrets: inherit
 
   Prod-Deployment-Cleanup:
     needs: Deploy-to-Dev
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
+    with:
+      tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}

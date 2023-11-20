@@ -13,10 +13,16 @@ on:
         required: true
       MULE_CLIENT_SECRET: 
         required: true
+    outputs:
+      app-version:
+        description: The application version
+        value: ${{ jobs.build-and-publish.outputs.version }}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    outputs:
+      version: "1.0.0-${{ steps.vars.outputs.SHA_SHORT }}"
     steps:
     # Checkout current branch
     - uses: actions/checkout@v3

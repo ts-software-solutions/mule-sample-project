@@ -2,18 +2,21 @@ name: After Prod Deployment Tasks
 
 on:
   workflow_call:
+    inputs:
+      tag-version :
+        required: true
+        type: string
 
 jobs:
   create-tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Get short commit tag
         id: vars
         run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
-          tag: "latest"
+          tag: ${{ inputs.tag-version }}
           message: "Latest release"
-          commit_sha: ${{ steps.vars.outputs.SHA_SHORT }}
