@@ -22,7 +22,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
-      app-version: ${{ steps.vars.outputs.APP_VERSION }}
+      app-version: ${{ steps.version.outputs.APP_VERSION }}
     steps:
     # Checkout current branch
     - uses: actions/checkout@v3
@@ -80,13 +80,16 @@ jobs:
         output_file: .m2/settings.xml
     # Get current github sha value short version for use in version number
     - name: Get short commit sha for revision
-      id: vars
+      id: sha
       run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Set App Version
+      id: version
       run: echo "APP_VERSION=1.0.0-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-    
+
     # Build Jar File 
     - name: Build Jar
-      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.vars.outputs.SHA_SHORT }}
+      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
     
     - name: Upload Jar and Pom.xml
       uses: actions/upload-artifact@v3
