@@ -18,8 +18,10 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     steps:
+    # Checkout current branch
     - uses: actions/checkout@v3
-   
+    
+    # Setup java and maven settings
     - name: Set up JDK 8
       uses: actions/setup-java@v3
       with:
@@ -70,8 +72,15 @@ jobs:
             "github"
           ]
         output_file: .m2/settings.xml
-    - name: Test and Build Jar
-      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ github.sha }}
+    # Get current github sha value short version for use in version number
+    - name: Get short commit sha for revision
+      id: vars
+      run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    
+    # Build Jar File 
+    - name: Build Jar
+      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.vars.outputs.SHA_SHORT }}
+    
     - name: Upload Jar and Pom.xml
       uses: actions/upload-artifact@v3
       with:
