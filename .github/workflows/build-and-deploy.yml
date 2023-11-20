@@ -12,7 +12,6 @@ jobs:
   Deploy-to-Dev:    
     needs: Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
-    environment: DEV
     secrets: inherit
     with: 
       mule-env: 'DEV'
