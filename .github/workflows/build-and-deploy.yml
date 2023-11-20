@@ -12,11 +12,11 @@ jobs:
 
   Deploy-to-Dev:    
     needs: Build-And-Publish
-    env: 'DEV'
+    environment: DEV
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
     secrets: inherit
     with: 
-      environment: 'DEV'
+      mule-env: 'DEV'
 
   Deployment-Cleanup:
     needs: [ Build-And-Publish, Deploy-to-Dev ]

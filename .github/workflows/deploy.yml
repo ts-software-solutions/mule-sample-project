@@ -10,7 +10,7 @@ on:
       MULE_CLIENT_SECRET: 
         required: true
     inputs:
-      environment: 
+      mule-env: 
         description: The MuleSoft environment that the deployment will be deployed to
         required: true
         type: string
@@ -35,4 +35,4 @@ jobs:
       id: file_name
 
     - name: Deploy To specified environment
-      run: mvn mule:deploy -e -P ${{ inputs.environment }} -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
+      run: mvn mule:deploy -e -P ${{ inputs.mule-env }} -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
