@@ -9,6 +9,7 @@ on:
 
 jobs:
   Build-And-Publish:
+    if: github.event_name == 'pull_request'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
   
