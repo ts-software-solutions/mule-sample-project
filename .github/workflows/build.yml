@@ -35,7 +35,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Configure Maven settings
-      uses: whelk-io/maven-settings-xml-action@v18
+      uses: whelk-io/maven-settings-xml-action@v20
       with:
         servers: >
           [

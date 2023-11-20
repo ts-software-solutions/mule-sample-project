@@ -12,13 +12,13 @@ jobs:
     secrets: inherit
   
 
-  Deploy-to-Dev:
-    needs: Build-And-Publish
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy-to-dev.yml@main
-    secrets: inherit
+  # Deploy-to-Dev:
+  #   needs: Build-And-Publish
+  #   uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy-to-dev.yml@main
+  #   secrets: inherit
 
   Prod-Deployment-Cleanup:
-    needs: [Deploy-to-Dev,Build-And-Publish]
+    needs: Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
       tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}
