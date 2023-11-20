@@ -20,4 +20,5 @@ jobs:
         id: "tag_create"
         with:
           tag: ${{ inputs.tag-version }}
+          github-token: ${{ secrets.GH_PAT }}
           message: "Latest release"
