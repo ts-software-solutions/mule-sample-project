@@ -16,13 +16,13 @@ on:
     outputs:
       app-version:
         description: The application version
-        value: ${{ jobs.build-and-publish.outputs.version }}
+        value: ${{ jobs.build-and-publish.outputs.app-version }}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
-      version: "1.0.0-${{ steps.vars.outputs.SHA_SHORT }}"
+      app-version: ${{ steps.vars.outputs.APP_VERSION }}
     steps:
     # Checkout current branch
     - uses: actions/checkout@v3
@@ -82,6 +82,7 @@ jobs:
     - name: Get short commit sha for revision
       id: vars
       run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      run: echo "APP_VERSION=1.0.0-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     
     # Build Jar File 
     - name: Build Jar
