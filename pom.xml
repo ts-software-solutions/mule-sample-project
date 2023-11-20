@@ -4,7 +4,7 @@
 
 	<groupId>com.mycompany</groupId>
 	<artifactId>mule-sample-project</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0-${revision}</version>
 	<packaging>mule-application</packaging>
 
 	<name>mule-sample-project</name>
@@ -16,6 +16,7 @@
 		<mule.maven.plugin.version>3.8.2</mule.maven.plugin.version>
 		<munit.version>2.3.14</munit.version>
 		<muleApplicationName>${project.artifactId}-v1-${mule.env}</muleApplicationName>
+		<revision>local</revision>
 		<artifactPath>dummy</artifactPath>
 		<mule.key>dummy</mule.key>
         <connectedAppClientId>dummy</connectedAppClientId>
