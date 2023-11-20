@@ -6,21 +6,19 @@ on:
 
 jobs:
   Build-And-Publish:
-    if: github.event_name == 'pull_request'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
 
   Deploy-to-Dev:    
     needs: Build-And-Publish
-    environment: DEV
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    environment: DEV
     secrets: inherit
     with: 
       mule-env: 'DEV'
 
   Deployment-Cleanup:
     needs: [ Build-And-Publish, Deploy-to-Dev ]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
       tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}
