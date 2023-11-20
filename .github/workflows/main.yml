@@ -2,22 +2,27 @@ name: Main Configuration file for orchestration of pipeline
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: ["main"]
 
 jobs:
   Build-And-Publish:
+    if: github.event_name == 'pull_request'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
   
 
-  Deploy-to-Dev:
-    if: github.event.pull_request.merged == true
+  Deploy-to-Dev:    
     needs: Build-And-Publish
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy-to-dev.yml@main
     secrets: inherit
 
   Prod-Deployment-Cleanup:
     needs: [ Build-And-Publish, Deploy-to-Dev ]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
       tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}
