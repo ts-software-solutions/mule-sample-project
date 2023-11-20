@@ -9,6 +9,11 @@ on:
         required: true
       MULE_CLIENT_SECRET: 
         required: true
+    inputs:
+      environment: 
+        description: The MuleSoft environment that the deployment will be deployed to
+        required: true
+        type: string
 
 jobs:
   deploy-to-dev:
@@ -23,10 +28,11 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-    - name: Get Jar File
+    
+    - name: Get Jar Full File Name
       run: |
         echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
       id: file_name
 
-    - name: Deploy to dev
-      run: mvn mule:deploy -e -P dev -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
+    - name: Deploy To specified environment
+      run: mvn mule:deploy -e -P ${{ inputs.environment }} -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
