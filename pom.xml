@@ -85,9 +85,9 @@
 
 	<profiles>
 		<profile>
-			<id>dev</id>
+			<id>DEV</id>
 			<properties>
-				<mule.env>dev</mule.env>
+				<mule.env>DEV</mule.env>
 				<workers>1</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
