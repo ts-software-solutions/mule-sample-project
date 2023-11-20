@@ -16,9 +16,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: Create Tag 
-        uses: rickstaa/action-create-tag@v1
+        uses: tvdias/github-tagger@v0.0.1
         id: "tag_create"
         with:
+          repo-token: ${{ secrets.GH_PAT }}
           tag: ${{ inputs.tag-version }}
-          github-token: ${{ secrets.GH_PAT }}
-          message: "Latest release"
