@@ -89,7 +89,7 @@ jobs:
 
     # Build Jar File 
     - name: Build Jar
-      run: mvn clean package -e -U -s ./.m2/settings.xml -P DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
+      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
     
     - name: Upload Jar and Pom.xml
       uses: actions/upload-artifact@v3
