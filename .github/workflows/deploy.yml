@@ -18,6 +18,7 @@ on:
 jobs:
   deploy-to-dev:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.mule-env }}
     steps:
     - uses: actions/download-artifact@v3
       with:
