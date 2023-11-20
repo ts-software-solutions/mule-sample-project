@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build-and-publish:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
     # Checkout current branch
@@ -65,5 +65,5 @@ jobs:
         output_file: .m2/settings.xml
 
     # Run MUnit Tests
-    - name: Build Jar
+    - name: Run Unit Tests
       run: mvn clean test -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
