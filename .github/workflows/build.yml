@@ -17,12 +17,16 @@ on:
       app-version:
         description: The application version
         value: ${{ jobs.build-and-publish.outputs.app-version }}
+      short-sha:
+        description: Short Sha of commit
+        value: ${{ jobs.build-and-publish.outputs.short-sha }}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
       app-version: ${{ steps.version.outputs.APP_VERSION }}
+      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}      
     steps:
     # Checkout current branch
     - uses: actions/checkout@v3

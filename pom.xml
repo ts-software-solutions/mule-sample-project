@@ -94,6 +94,16 @@
 				<environment>DEV</environment>
 			</properties>
 		</profile>
+		<profile>
+			<id>UAT</id>
+			<properties>
+				<mule.env>UAT</mule.env>
+				<workers>1</workers>
+				<workerSize>SMALL</workerSize>
+				<region>us-east-2</region>
+				<environment>DEV</environment>
+			</properties>
+		</profile>
 	</profiles>
 
 	<dependencies>

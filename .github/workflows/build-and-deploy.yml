@@ -15,9 +15,18 @@ jobs:
     secrets: inherit
     with: 
       mule-env: 'DEV'
+  
+  # Create-release-branch
+  Deploy-to-UAT:    
+    needs: [ Build-And-Publish, Deploy-to-Dev ]
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    secrets: inherit
+    with: 
+      mule-env: 'UAT'
+      short-sha: ${{ needs.Build-And-Publish.outputs.short-sha }}
 
   Deployment-Cleanup:
-    needs: [ Build-And-Publish, Deploy-to-Dev ]
+    needs: [ Build-And-Publish, Deploy-to-Dev, Deploy-to-UAT ]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
       tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}

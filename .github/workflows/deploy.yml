@@ -14,9 +14,26 @@ on:
         description: The MuleSoft environment that the deployment will be deployed to
         required: true
         type: string
+      short-sha: 
+        description: The short sha of the commit to the Dev branch that is a candidate for moving up to production
+        required: true
+        type: string
 
 jobs:
-  deploy-to-dev:
+  create-release:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.mule-env == 'UAT' }}
+    environment: ${{ inputs.mule-env }}
+    steps:
+    - uses: peterjgrainger/action-create-branch@v2.2.0
+      name: Create Release Branch 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: ${{ format('{0}/{1}', 'refs/heads/release/', inputs.short-sha) }}
+
+
+  deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.mule-env }}
     steps:
