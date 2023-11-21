@@ -86,7 +86,7 @@ jobs:
 
     # Set branch name to be used for eventual release
     - name: Set Release Branch Name 
-      id: sha
+      id: release-branch
       run: echo "BRANCH_NAME=refs/head/release/${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
 
     # Build Jar File 
