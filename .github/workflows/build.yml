@@ -14,19 +14,15 @@ on:
       MULE_CLIENT_SECRET: 
         required: true
     outputs:
-      app-version:
-        description: The application version
-        value: ${{ jobs.build-and-publish.outputs.app-version }}
-      short-sha:
-        description: Short Sha of commit
-        value: ${{ jobs.build-and-publish.outputs.short-sha }}
+      release-branch:
+        description: Branch name to be used for eventual deploy to production
+        value: ${{ jobs.build-and-publish.outputs.release-branch }}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
-      app-version: ${{ steps.version.outputs.APP_VERSION }}
-      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}      
+      release-branch: ${{ steps.release-branch.outputs.BRANCH_NAME }}    
     steps:
     # Checkout current branch
     - uses: actions/checkout@v3
@@ -82,14 +78,16 @@ jobs:
             "github"
           ]
         output_file: .m2/settings.xml
+
     # Get current github sha value short version for use in version number
     - name: Get short commit sha for revision
       id: sha
       run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-    - name: Set App Version
-      id: version
-      run: echo "APP_VERSION=1.0.0-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    # Set branch name to be used for eventual release
+    - name: Set Release Branch Name 
+      id: sha
+      run: echo "BRANCH_NAME=refs/head/release/${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
 
     # Build Jar File 
     - name: Build Jar

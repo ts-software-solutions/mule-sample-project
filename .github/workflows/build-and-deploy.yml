@@ -9,25 +9,32 @@ jobs:
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
 
-  Deploy-to-Dev:    
+  Deploy-to-DEV:    
     needs: Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
     secrets: inherit
     with: 
       mule-env: 'DEV'
-      short-sha: ${{ needs.Build-And-Publish.outputs.short-sha }}
+      release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
-  # Create-release-branch
   Deploy-to-UAT:    
-    needs: [ Build-And-Publish, Deploy-to-Dev ]
+    needs:  Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
     secrets: inherit
     with: 
       mule-env: 'UAT'
-      short-sha: ${{ needs.Build-And-Publish.outputs.short-sha }}
+      release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
+  
+  Deploy-to-PROD:    
+    needs:  Build-And-Publish
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    secrets: inherit
+    with: 
+      mule-env: 'PROD'
+      release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
 
   Deployment-Cleanup:
-    needs: [ Build-And-Publish, Deploy-to-Dev, Deploy-to-UAT ]
+    needs:  Build-And-Publish
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
-      tag-version: ${{ needs.Build-And-Publish.outputs.app-version }}
+      release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}

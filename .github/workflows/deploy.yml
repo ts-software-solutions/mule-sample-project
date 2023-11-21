@@ -14,11 +14,20 @@ on:
         description: The MuleSoft environment that the deployment will be deployed to
         required: true
         type: string
-      short-sha: 
-        description: The short sha of the commit to the Dev branch that is a candidate for moving up to production
+      release-branch: 
+        description: The Release Branch Name that will be created when a deploy to staging environment is done
         required: true
         type: string
-
+      main-branch: 
+        description: Name of the main branch used. default to main
+        required: false
+        type: string
+        default: main
+      develop-branch: 
+        description: Name of the develop branch used. default to develop
+        required: false
+        type: string
+        default: develop
 jobs:
   create-release:
     runs-on: ubuntu-latest
@@ -30,8 +39,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: ${{ format('{0}/{1}', 'refs/heads/release', inputs.short-sha) }}
-
+        branch: ${{ inputs.release-branch }}
 
   deploy:
     runs-on: ubuntu-latest

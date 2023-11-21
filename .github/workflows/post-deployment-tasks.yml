@@ -3,33 +3,64 @@ name: After Prod Deployment Tasks
 on:
   workflow_call:
     inputs:
-      tag-version:
+      release-branch: 
+        description: The name of the release branch to delete
         required: true
         type: string
+
 
 jobs:
   create-tag:
     runs-on: ubuntu-latest
     steps:
-      
-      - name: Checkout current branch
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      
-      - name: Retrieve tag exists flag
-        uses: mukunku/tag-exists-action@v1.4.0
-        id: checkTag
-        with:
-          tag: ${{ inputs.tag-version }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout current branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Retrieve tag exists flag
+      uses: mukunku/tag-exists-action@v1.4.0
+      id: checkTag
+      with:
+        tag: ${{ inputs.tag-version }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify and create tag if not exists
-        if: ${{ steps.checkTag.outputs.exists == 'false' }}
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          default_bump: false
-          custom_tag:  ${{ inputs.tag-version }}
-          tag_prefix: ""
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Verify and create tag if not exists
+      if: ${{ steps.checkTag.outputs.exists == 'false' }}
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        default_bump: false
+        custom_tag:  ${{ inputs.tag-version }}
+        tag_prefix: ""
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+  
+  merge-release:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.mule-env == 'PROD' }}
+    environment: ${{ inputs.mule-env }}
+    steps:
+    - name: Merge release -> develop
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: ${{ inputs.release-branch }}
+        target_branch: ${{ inputs.develop }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Merge release -> main
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: ${{ inputs.release-branch }}
+        target_branch: ${{ inputs.main }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  delete-release-branch:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete branch
+      uses: dawidd6/action-delete-branch@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branches: ${{ inputs.release-branch }}
