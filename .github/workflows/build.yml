@@ -104,12 +104,6 @@ jobs:
         if [[ $string =~ "release-" ]]; then echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT; else echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT; fi
         echo $BRANCH_NAME
 
-    # Set branch name to current branch name
-    - name: Set Release Branch Name 
-      if: ${{ contains( GITHUB.ref_name, 'release-' ) }}    
-      id: release-branch
-      run: echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT
-
     # Build Jar File 
     - name: Build Jar
       run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
