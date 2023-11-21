@@ -2,16 +2,16 @@ name: Main Configuration file for orchestration of pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: ["develop"]
 
 jobs:
   Build-And-Publish:
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@main
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@develop
     secrets: inherit
 
   Deploy-to-DEV:    
     needs: [Build-And-Publish]
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
     with: 
       mule-env: 'DEV'
@@ -19,7 +19,7 @@ jobs:
   
   Deploy-to-UAT:    
     needs: [Build-And-Publish, Deploy-to-DEV]
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
     with: 
       mule-env: 'UAT'
@@ -27,7 +27,7 @@ jobs:
   
   Deploy-to-PROD:    
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT]
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@main
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
     with: 
       mule-env: 'PROD'
@@ -35,7 +35,7 @@ jobs:
 
   Deployment-Cleanup:
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT, Deploy-to-PROD]
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@develop 
     with:
       tag-name: ${{ needs.Build-And-Publish.outputs.short-sha }}
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
