@@ -15,6 +15,7 @@ jobs:
     secrets: inherit
     with: 
       mule-env: 'DEV'
+      short-sha: ${{ needs.Build-And-Publish.outputs.short-sha }}
   
   # Create-release-branch
   Deploy-to-UAT:    
