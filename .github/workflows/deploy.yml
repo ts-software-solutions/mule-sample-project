@@ -18,16 +18,7 @@ on:
         description: The Release Branch Name that will be created when a deploy to staging environment is done
         required: true
         type: string
-      main-branch: 
-        description: Name of the main branch used. default to main
-        required: false
-        type: string
-        default: main
-      develop-branch: 
-        description: Name of the develop branch used. default to develop
-        required: false
-        type: string
-        default: develop
+        
 jobs:
   create-release:
     runs-on: ubuntu-latest
