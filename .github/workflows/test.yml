@@ -1,9 +1,7 @@
 name: Test Code 
 
 on:
-  pull_request:
-    branches: ["develop"]
-    types: [opened, synchronize, reopened]
+  workflow_call:
 
 jobs:
   run-tests:

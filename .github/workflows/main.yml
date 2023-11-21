@@ -2,14 +2,22 @@ name: Main Configuration file for orchestration of pipeline
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["develop", "releases-*", "main"]
+  pull_request:
+    branches: ["develop", "main"]
 
 jobs:
+  Run-Tests:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/test.yml@develop
+
   Build-And-Publish:
+    if: ${{ github.event_name != 'pull_request' }}
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@develop
     secrets: inherit
 
-  Deploy-to-DEV:    
+  Deploy-to-DEV:
+    if: ${{ github.event_name != 'pull_request')}}
     needs: [Build-And-Publish]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -17,7 +25,8 @@ jobs:
       mule-env: 'DEV'
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
-  Deploy-to-UAT:    
+  Deploy-to-UAT:
+    if: ${{ github.event_name != 'pull_request')}}
     needs: [Build-And-Publish, Deploy-to-DEV]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -25,7 +34,8 @@ jobs:
       mule-env: 'UAT'
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
-  Deploy-to-PROD:    
+  Deploy-to-PROD:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -34,6 +44,7 @@ jobs:
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
 
   Deployment-Cleanup:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT, Deploy-to-PROD]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@develop 
     with:

@@ -83,15 +83,33 @@ jobs:
           ]
         output_file: .m2/settings.xml
 
+    #### This is conditionally settings sha and release-branch variables if current branch is release branch or not ###
+    #### IF current branch is not a release- branch ###
     # Get current github sha value short version for use in version number
     - name: Get short commit sha for revision
+      if: ${{ !contains(GITHUB.ref_name, 'releases-' }}
       id: sha
       run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     # Set branch name to be used for eventual release
     - name: Set Release Branch Name 
+      if: ${{ !contains(GITHUB.ref_name, 'releases-' }}    
       id: release-branch
       run: echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
+    
+    #### IF current branch is not a release- branch ###
+    # Set sha to current release branch sha
+    - name: Get short commit sha for revision
+      if: ${{ contains(GITHUB.ref_name, 'releases-' }}
+      id: sha
+      run: |
+        echo TEXT=${{ GITHUB.ref_name }} && "SHA_SHORT=${TEXT##*-}" >> $GITHUB_OUTPUT
+
+    # Set branch name to current branch name
+    - name: Set Release Branch Name 
+      if: ${{ contains(GITHUB.ref_name, 'releases-' }}    
+      id: release-branch
+      run: echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT
 
     # Build Jar File 
     - name: Build Jar
