@@ -3,6 +3,10 @@ name: After Prod Deployment Tasks
 on:
   workflow_call:
     inputs:
+      tag-name: 
+        description: name of which to create the tag
+        required: true
+        type: string
       release-branch: 
         description: The name of the release branch to delete
         required: true

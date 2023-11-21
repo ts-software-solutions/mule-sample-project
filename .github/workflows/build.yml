@@ -14,6 +14,9 @@ on:
       MULE_CLIENT_SECRET: 
         required: true
     outputs:
+      short-sha: 
+        description: Short Sha used for revision and release branch name
+        value: ${{ jobs.build-and-publish.outputs.short-sha }}
       release-branch:
         description: Branch name to be used for eventual deploy to production
         value: ${{ jobs.build-and-publish.outputs.release-branch }}
@@ -22,6 +25,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
+      short-sha: ${{ steps.sha.outputs.SHA_SHORT }} 
       release-branch: ${{ steps.release-branch.outputs.BRANCH_NAME }}    
     steps:
     # Checkout current branch
@@ -87,7 +91,7 @@ jobs:
     # Set branch name to be used for eventual release
     - name: Set Release Branch Name 
       id: release-branch
-      run: echo "BRANCH_NAME=refs/head/release/${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
+      run: echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
 
     # Build Jar File 
     - name: Build Jar

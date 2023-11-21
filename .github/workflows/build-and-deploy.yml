@@ -37,4 +37,5 @@ jobs:
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT, Deploy-to-PROD]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@main 
     with:
+      tag-name: ${{ needs.Build-And-Publish.outputs.short-sha }}
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
