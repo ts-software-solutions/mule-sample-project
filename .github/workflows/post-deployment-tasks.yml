@@ -58,7 +58,7 @@ jobs:
         from_branch: ${{ inputs.release-branch }}
         target_branch: ${{ inputs.develop-branch }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Merge release branch into dev branch
+        message: Merge release branch into dev branch [skip ci]
 
     - name: Merge release -> main
       uses: devmasx/merge-branch@master
@@ -67,7 +67,7 @@ jobs:
         from_branch: ${{ inputs.release-branch }}
         target_branch: ${{ inputs.main-branch }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Merge release branch into main branch
+        message: Merge release branch into main branch [skip ci]
 
   delete-release-branch:
     runs-on: ubuntu-latest
