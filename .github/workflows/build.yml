@@ -86,24 +86,23 @@ jobs:
     #### This is conditionally settings sha and release-branch variables if current branch is release branch or not ###
     #### IF current branch is not a release- branch ###
     # Get current github sha value short version for use in version number
+    #### IF current branch is a release- branch ###
+    # Set sha to current release branch sha
     - name: Get short commit sha for revision
-      if: ${{ !contains( GITHUB.ref_name, 'release-' ) }}
       id: sha
-      run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      run: |
+        CURR_BRANCH= ${{ GITHUB.ref_name }}
+        if [[ $string =~ "release-" ]]; then echo "SHA_SHORT=${CURR_BRANCH##*-}" >> $GITHUB_OUTPUT; else echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT; fi
+        echo $SHA_SHORT
 
     # Set branch name to be used for eventual release
     - name: Set Release Branch Name 
       if: ${{ !contains( GITHUB.ref_name, 'release-' ) }}    
       id: release-branch
-      run: echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
-    
-    #### IF current branch is a release- branch ###
-    # Set sha to current release branch sha
-    - name: Get short commit sha for revision
-      if: ${{ contains( GITHUB.ref_name, 'release-' ) }}
-      id: sha
       run: |
-        echo TEXT=${{ GITHUB.ref_name }} && "SHA_SHORT=${TEXT##*-}" >> $GITHUB_OUTPUT
+        CURR_BRANCH= ${{ GITHUB.ref_name }}
+        if [[ $string =~ "release-" ]]; then echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT; else echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT; fi
+        echo $BRANCH_NAME
 
     # Set branch name to current branch name
     - name: Set Release Branch Name 
