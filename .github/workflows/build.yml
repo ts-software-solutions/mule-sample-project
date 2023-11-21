@@ -92,7 +92,7 @@ jobs:
       id: sha
       run: |
         CURR_BRANCH=${{ GITHUB.ref_name }}
-        if [[ $string =~ "release-" ]]; then echo "SHA_SHORT=${CURR_BRANCH##*-}" >> $GITHUB_OUTPUT; else echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT; fi
+        if [[ $CURR_BRANCH =~ "release-" ]]; then echo "SHA_SHORT=${CURR_BRANCH##*-}" >> $GITHUB_OUTPUT; else echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT; fi
         echo $SHA_SHORT
 
     # Set branch name to be used for eventual release
@@ -101,7 +101,7 @@ jobs:
       id: release-branch
       run: |
         CURR_BRANCH=${{ GITHUB.ref_name }}
-        if [[ $string =~ "release-" ]]; then echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT; else echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT; fi
+        if [[ $CURR_BRANCH =~ "release-" ]]; then echo "BRANCH_NAME=${{ GITHUB.ref_name }}" >> $GITHUB_OUTPUT; else echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT; fi
         echo $BRANCH_NAME
 
     # Build Jar File 
