@@ -97,7 +97,7 @@ jobs:
       id: release-branch
       run: echo "BRANCH_NAME=release-${{ steps.sha.outputs.SHA_SHORT }}" >> $GITHUB_OUTPUT
     
-    #### IF current branch is not a release- branch ###
+    #### IF current branch is a release- branch ###
     # Set sha to current release branch sha
     - name: Get short commit sha for revision
       if: ${{ contains(GITHUB.ref_name, 'releases-' }}
