@@ -56,4 +56,4 @@ jobs:
     #   run: mvn mule:deploy -e -P ${{ inputs.mule-env }} -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -DartifactPath=${{ steps.file_name.outputs.FILE_PATH }} -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }}
 
     - name: you did it 
-      run: echo You Deployed! (Trust me)
+      run: echo "You Deployed! Trust me"
