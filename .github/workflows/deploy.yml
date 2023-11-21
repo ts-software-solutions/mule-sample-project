@@ -22,7 +22,7 @@ on:
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    description: Create Release branch if environment is UAT and branch is not a release branch
+    # Create Release branch if environment is UAT and branch is not a release branch
     if: ${{ inputs.mule-env == 'UAT' && !contains( GITHUB.ref_name, 'releases-' )}}
     environment: ${{ inputs.mule-env }}
     steps:
