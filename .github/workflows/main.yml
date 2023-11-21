@@ -17,7 +17,7 @@ jobs:
     secrets: inherit
 
   Deploy-to-DEV:
-    if: ${{ github.event_name != 'pull_request')}}
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [Build-And-Publish]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -26,7 +26,7 @@ jobs:
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
   Deploy-to-UAT:
-    if: ${{ github.event_name != 'pull_request')}}
+    if: ${{ github.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
