@@ -2,9 +2,9 @@ name: Main Configuration file for orchestration of pipeline
 
 on:
   push:
-    branches: ["develop", "releases-*", "main"]
+    branches: ["develop", "release-*", "main"]
   pull_request:
-    branches: ["develop", "releases-*", "main"]
+    branches: ["develop", "release-*", "main"]
 
 jobs:
   Run-Tests:
