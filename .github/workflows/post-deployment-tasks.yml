@@ -68,11 +68,11 @@ jobs:
     
     - name: Merge release -> main
       uses: everlytic/branch-merge@1.1.2
-        with:
-          github_token: ${{ secrets.GH_PAT }}
-          source_ref: ${{ inputs.release-branch }}
-          target_branch: ${{ inputs.main-branch }}
-          commit_message_template: 'Merge release branch into main branch [skip ci]'
+      with:
+        github_token: ${{ secrets.GH_PAT }}
+        source_ref: ${{ inputs.release-branch }}
+        target_branch: ${{ inputs.main-branch }}
+        commit_message_template: 'Merge release branch into main branch [skip ci]'
 
 
   
