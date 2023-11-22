@@ -50,6 +50,7 @@ jobs:
   
   merge-release:
     runs-on: ubuntu-latest
+    if: ${{ GITHUB.ref_name != 'main' }}
     steps:
     - name: Merge release -> develop
       uses: devmasx/merge-branch@master
@@ -68,9 +69,23 @@ jobs:
         target_branch: ${{ inputs.main-branch }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
         message: Merge release branch into main branch [skip ci]
+  
+  merge-main-into-dev:
+    runs-on: ubuntu-latest
+    if: ${{ GITHUB.ref_name == 'main' }}
+    steps:
+    - name: Merge main -> develop
+      uses: devmasx/merge-branch@master
+      with:
+        type: now
+        from_branch: ${{ inputs.main-branch }}
+        target_branch: ${{ inputs.develop-branch }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        message: Merging Hotfix Code into Develop
 
   delete-release-branch:
     runs-on: ubuntu-latest
+    if: ${{ GITHUB.REF_NAME != 'main' }}
     needs: merge-release
     steps:
     - name: Delete branch

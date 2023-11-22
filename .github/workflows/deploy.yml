@@ -23,11 +23,19 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     # Create Release branch if environment is UAT and branch is not a release branch
-    if: ${{ inputs.mule-env == 'UAT' && !contains( GITHUB.ref_name, 'releases-' )}}
+    if: ${{ inputs.mule-env == 'UAT'}}
     environment: ${{ inputs.mule-env }}
     steps:
+    
+    - name: Check if release branch exists
+      id: branch-exists
+      run: |
+        export BRANCH=${{ inputs.release-branch }}
+        echo BRANCH_EXISTS="$(git ls-remote --heads origin refs/heads/$BRANCH | wc -l )" >> $GITHUB_OUTPUT
+    
     - uses: peterjgrainger/action-create-branch@v2.2.0
-      name: Create Release Branch 
+      if: ${{ steps.branch-exists.outputs.BRANCH_EXISTS == '0' }}
+      name: Create Release Branch if doesn't exist 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

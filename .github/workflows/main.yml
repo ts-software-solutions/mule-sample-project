@@ -4,20 +4,20 @@ on:
   push:
     branches: ["develop", "releases-*", "main"]
   pull_request:
-    branches: ["develop", "main"]
+    branches: ["develop", "releases-*", "main"]
 
 jobs:
   Run-Tests:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ GITHUB.event_name == 'pull_request' }}
     uses: ts-software-solutions/mule-sample-project/.github/workflows/test.yml@develop
 
   Build-And-Publish:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ GITHUB.event_name != 'pull_request' }}
     uses: ts-software-solutions/mule-sample-project/.github/workflows/build.yml@develop
     secrets: inherit
 
   Deploy-to-DEV:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ GITHUB.event_name != 'pull_request' && GITHUB.ref_name != 'main'}}
     needs: [Build-And-Publish]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -26,7 +26,7 @@ jobs:
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
   Deploy-to-UAT:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ GITHUB.event_name != 'pull_request' && GITHUB.ref_name != 'main'}}
     needs: [Build-And-Publish, Deploy-to-DEV]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -35,7 +35,7 @@ jobs:
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
   
   Deploy-to-PROD:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ GITHUB.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/deploy.yml@develop
     secrets: inherit
@@ -44,7 +44,7 @@ jobs:
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
 
   Deployment-Cleanup:
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ GITHUB.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT, Deploy-to-PROD]
     uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@develop 
     with:
