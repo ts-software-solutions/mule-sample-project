@@ -97,7 +97,6 @@ jobs:
 
     # Set branch name to be used for eventual release
     - name: Set Release Branch Name 
-      if: ${{ !contains( GITHUB.ref_name, 'release-' ) }}    
       id: release-branch
       run: |
         CURR_BRANCH=${{ GITHUB.ref_name }}
