@@ -2,14 +2,15 @@ name: Main Configuration file for orchestration of pipeline
 
 on:
   push:
-    branches: ["develop", "releases-*", "main"]
+    branches: ["develop", "release-*", "main"]
   pull_request:
-    branches: ["develop", "releases-*", "main"]
+    branches: ["develop", "release-*", "main"]
 
 jobs:
   Run-Tests:
     if: ${{ GITHUB.event_name == 'pull_request' }}
     uses: ts-software-solutions/mule-sample-project/.github/workflows/test.yml@develop
+    secrets: inherit
 
   Build-And-Publish:
     if: ${{ GITHUB.event_name != 'pull_request' }}
@@ -46,7 +47,8 @@ jobs:
   Deployment-Cleanup:
     if: ${{ GITHUB.event_name != 'pull_request' }}
     needs: [Build-And-Publish, Deploy-to-DEV, Deploy-to-UAT, Deploy-to-PROD]
-    uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@develop 
+    uses: ts-software-solutions/mule-sample-project/.github/workflows/post-deployment-tasks.yml@develop
+    secrets: inherit 
     with:
       tag-name: ${{ needs.Build-And-Publish.outputs.short-sha }}
       release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}

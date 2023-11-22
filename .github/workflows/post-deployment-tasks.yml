@@ -27,10 +27,10 @@ jobs:
   create-tag:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout current branch
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+    - name: Checkout release branch
+      uses: actions/checkout@v4
+      with: 
+        ref: ${{ inputs.release-branch }}
     
     - name: Retrieve tag exists flag
       uses: mukunku/tag-exists-action@v1.4.0
@@ -52,36 +52,46 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ GITHUB.ref_name != 'main' }}
     steps:
+    
+    - name: Checkout release branch
+      uses: actions/checkout@v4
+      with: 
+        ref: ${{ inputs.release-branch }}
+    
     - name: Merge release -> develop
-      uses: devmasx/merge-branch@master
+      uses: everlytic/branch-merge@1.1.2
       with:
-        type: now
-        from_branch: ${{ inputs.release-branch }}
+        github_token: ${{ secrets.GH_PAT }}
+        source_ref: ${{ format('{0}/{1}', 'refs/heads', inputs.release-branch) }}
         target_branch: ${{ inputs.develop-branch }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Merge release branch into dev branch [skip ci]
-
+        commit_message_template: 'Merge release branch into dev branch [skip ci]'
+    
     - name: Merge release -> main
-      uses: devmasx/merge-branch@master
+      uses: everlytic/branch-merge@1.1.2
       with:
-        type: now
-        from_branch: ${{ inputs.release-branch }}
+        github_token: ${{ secrets.GH_PAT }}
+        source_ref: ${{ format('{0}/{1}', 'refs/heads', inputs.release-branch) }}
         target_branch: ${{ inputs.main-branch }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Merge release branch into main branch [skip ci]
+        commit_message_template: 'Merge release branch into main branch [skip ci]'
+
+
   
   merge-main-into-dev:
     runs-on: ubuntu-latest
     if: ${{ GITHUB.ref_name == 'main' }}
     steps:
-    - name: Merge main -> develop
-      uses: devmasx/merge-branch@master
+    - name: Checkout release branch
+      uses: actions/checkout@v4
+      with: 
+        ref: ${{ inputs.release-branch }}
+    
+    - name: Merge release -> develop
+      uses: everlytic/branch-merge@1.1.2
       with:
-        type: now
-        from_branch: ${{ inputs.main-branch }}
+        github_token: ${{ secrets.GH_PAT }}
+        source_ref: 'refs/heads/main'
         target_branch: ${{ inputs.develop-branch }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: Merging Hotfix Code into Develop
+        commit_message_template: 'Merge hotfix implementation into develop and start new pipeline'
 
   delete-release-branch:
     runs-on: ubuntu-latest
