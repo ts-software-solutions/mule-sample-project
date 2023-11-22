@@ -10,6 +10,7 @@ jobs:
   Run-Tests:
     if: ${{ GITHUB.event_name == 'pull_request' }}
     uses: ts-software-solutions/mule-sample-project/.github/workflows/test.yml@develop
+    secrets: inherit
 
   Build-And-Publish:
     if: ${{ GITHUB.event_name != 'pull_request' }}
