@@ -6,3 +6,5 @@ this is this
 this is this
 this is an update that was done directly on a hotfix branch
 this is this
+this is this
+this is an update that was done directly on the release branch
