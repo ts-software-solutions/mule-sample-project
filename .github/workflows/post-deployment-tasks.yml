@@ -62,7 +62,7 @@ jobs:
       uses: everlytic/branch-merge@1.1.2
       with:
         github_token: ${{ secrets.GH_PAT }}
-        source_ref: ${{ format('{0}/{1}', 'refs/heads/', inputs.release-branch) }}
+        source_ref: ${{ format('{0}/{1}', 'refs/heads', inputs.release-branch) }}
         target_branch: ${{ inputs.develop-branch }}
         commit_message_template: 'Merge release branch into dev branch [skip ci]'
     
@@ -70,7 +70,7 @@ jobs:
       uses: everlytic/branch-merge@1.1.2
       with:
         github_token: ${{ secrets.GH_PAT }}
-        source_ref: ${{ format('{0}/{1}', 'refs/heads/', inputs.release-branch) }}
+        source_ref: ${{ format('{0}/{1}', 'refs/heads', inputs.release-branch) }}
         target_branch: ${{ inputs.main-branch }}
         commit_message_template: 'Merge release branch into main branch [skip ci]'
 
