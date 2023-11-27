@@ -2,11 +2,10 @@ name: After Prod Deployment Tasks
 
 on:
   workflow_call:
-    inputs:
-      tag-name: 
-        description: name of which to create the tag
+    secrets:
+      GH_PAT: 
         required: true
-        type: string
+    inputs:
       release-branch: 
         description: The name of the release branch to delete
         required: true
@@ -24,33 +23,10 @@ on:
 
 
 jobs:
-  create-tag:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout release branch
-      uses: actions/checkout@v4
-      with: 
-        ref: ${{ inputs.release-branch }}
-    
-    - name: Retrieve tag exists flag
-      uses: mukunku/tag-exists-action@v1.4.0
-      id: checkTag
-      with:
-        tag: ${{ inputs.tag-name }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Verify and create tag if not exists
-      if: ${{ steps.checkTag.outputs.exists == 'false' }}
-      uses: mathieudutour/github-tag-action@v6.1
-      with:
-        default_bump: false
-        custom_tag:  ${{ inputs.tag-name }}
-        tag_prefix: ""
-        github_token: ${{ secrets.GITHUB_TOKEN }}
   
   merge-release:
     runs-on: ubuntu-latest
-    if: ${{ GITHUB.ref_name != 'main' }}
+    if: ${{ GITHUB.ref_name != inputs.main-branch }}
     steps:
     
     - name: Checkout release branch
@@ -74,28 +50,9 @@ jobs:
         target_branch: ${{ inputs.main-branch }}
         commit_message_template: 'Merge release branch into main branch [skip ci]'
 
-
-  
-  merge-main-into-dev:
-    runs-on: ubuntu-latest
-    if: ${{ GITHUB.ref_name == 'main' }}
-    steps:
-    - name: Checkout release branch
-      uses: actions/checkout@v4
-      with: 
-        ref: ${{ inputs.release-branch }}
-    
-    - name: Merge release -> develop
-      uses: everlytic/branch-merge@1.1.2
-      with:
-        github_token: ${{ secrets.GH_PAT }}
-        source_ref: 'refs/heads/main'
-        target_branch: ${{ inputs.develop-branch }}
-        commit_message_template: 'Merge hotfix implementation into develop and start new pipeline'
-
   delete-release-branch:
     runs-on: ubuntu-latest
-    if: ${{ GITHUB.REF_NAME != 'main' }}
+    if: ${{ GITHUB.REF_NAME != inputs.main-branch }}
     needs: merge-release
     steps:
     - name: Delete branch
@@ -103,3 +60,20 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: ${{ inputs.release-branch }}
+  
+  merge-main-into-dev:
+    runs-on: ubuntu-latest
+    if: ${{ GITHUB.ref_name == inputs.main-branch }}
+    steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v4
+      with: 
+        ref: ${{ inputs.main-branch }}
+    
+    - name: Merge main -> develop
+      uses: everlytic/branch-merge@1.1.2
+      with:
+        github_token: ${{ secrets.GH_PAT }}
+        source_ref: ${{ format('{0}/{1}', 'refs/heads', inputs.main-branch) }}
+        target_branch: ${{ inputs.develop-branch }}
+        commit_message_template: 'Merge hotfix implementation into develop and start new pipeline after hotfix'
