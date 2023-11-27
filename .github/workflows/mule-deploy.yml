@@ -8,5 +8,5 @@ on:
 
 jobs:
   Mule-Deploy:
-    uses: ts-software-solutions/shared-workflows/.github/workflows/test.yml@main
+    uses: ts-software-solutions/shared-workflows/.github/workflows/main.yml@main
     secrets: inherit
