@@ -59,4 +59,3 @@ jobs:
     secrets: inherit 
     with:
       tag-name: ${{ needs.Build-And-Publish.outputs.short-sha }}
-      release-branch: ${{ needs.Build-And-Publish.outputs.release-branch }}
