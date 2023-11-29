@@ -99,7 +99,7 @@
 			<properties>
 				<mule.env>UAT</mule.env>
 				<workers>1</workers>
-				<workerSize>SMALL</workerSize>
+				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
 				<environment>DEV</environment>
 			</properties>
