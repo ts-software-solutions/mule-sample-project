@@ -159,6 +159,7 @@ jobs:
       with:
         tag: ${{ inputs.early-access-name }} 
         prerelease: true
+        doNotFailIfNotFound: true
 
     - name: Print previous id
       run: echo "${{ steps.checkRelease.outputs.tag_name }}"
@@ -166,8 +167,9 @@ jobs:
     - name: Delete the prerelease branch if it exists
       if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
       uses: liudonghua123/delete-release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
-        token: ${{ secrets.GH_PAT }}
         release_name: ${{ inputs.early-access-name }}
 
     - name: Create prerelease for early-access
