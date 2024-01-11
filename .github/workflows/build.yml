@@ -137,8 +137,6 @@ jobs:
         echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
         echo "delimiter=target/"
         echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
-        echo "$FILE_PATH"
-        echo "$FILE_NAME"
       id: file_properties
 
 
@@ -191,5 +189,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
-        asset_name: ${{ steps.file_properties.outputs.FILE_NAME }}
+        asset_name: jar-file.jar
         asset_content_type: application/java-archive
