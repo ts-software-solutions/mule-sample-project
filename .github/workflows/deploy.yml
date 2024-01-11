@@ -53,7 +53,7 @@ jobs:
         echo "${{ steps.get_paths.outputs.SOURCE_CODE }}"
         echo "${{ steps.get_paths.outputs.JAR_FILE }}"
         ls ~
-        ls ~/${{ steps.get_paths.outputs.SOURCE_CODE }}
+        pwd
 
     - name: Set up JDK 8
       uses: actions/setup-java@v3
