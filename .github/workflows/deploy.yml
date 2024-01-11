@@ -47,12 +47,13 @@ jobs:
       run: |
         echo "SOURCE_CODE=$(ls -1 -d release_assets/*mule-sample-project*/)" >> $GITHUB_OUTPUT
         echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
-        ls ~
 
     - name: print variables
       run: |
         echo "${{ steps.get_paths.outputs.SOURCE_CODE }}"
         echo "${{ steps.get_paths.outputs.JAR_FILE }}"
+        ls ~
+        ls ~/${{ steps.get_paths.outputs.SOURCE_CODE }}
 
     - name: Set up JDK 8
       uses: actions/setup-java@v3
@@ -67,7 +68,7 @@ jobs:
         mvn mule:deploy -e -P ${{ inputs.mule-env }} \
         -f ./${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml \
         -Dmule.key=${{ secrets.CRYPTO_KEY }} \
-        -DartifactPath=${{ steps.get_paths.outputs.JAR_FILE }} \
+        -DartifactPath=~/${{ steps.get_paths.outputs.JAR_FILE }} \
         -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} \
         -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }} \
         -DanypointPlatformClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
