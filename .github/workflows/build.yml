@@ -127,7 +127,6 @@ jobs:
         echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo $SHA_SHORT
 
-    # Build Jar File 
     - name: Build Jar
       if: ${{ inputs.build-test == 'build' }}
       run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
@@ -139,7 +138,6 @@ jobs:
         echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
       id: file_properties
 
-
     - name: Create tag if not exists, if it does, update
       if: ${{ inputs.build-test == 'build' }}
       uses: richardsimko/update-tag@v1
@@ -148,7 +146,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check if Release already exists
+    - name: Check if early-access Release already exists
       id: checkRelease
       uses: cardinalby/git-get-release-action@v1
       env:
@@ -157,11 +155,6 @@ jobs:
         tag: ${{ inputs.early-access-name }} 
         prerelease: true
         doNotFailIfNotFound: true
-
-    - name: Print previous id
-      run: |
-        echo "${{ steps.checkRelease.outputs.tag_name }}"
-        echo "${{ steps.file_properties.outputs.FILE_NAME }}"
 
     - name: Delete the early-access release if an old one exists
       if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}

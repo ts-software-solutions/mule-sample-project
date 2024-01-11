@@ -1,0 +1,39 @@
+name: Deploy workflow
+
+on:
+  workflow_call:
+    secrets:
+      CRYPTO_KEY: 
+        required: true
+      MULE_CLIENT_ID: 
+        required: true
+      MULE_CLIENT_SECRET: 
+        required: true
+      ANYPOINT_CLIENT_ID: 
+        required: true
+      ANYPOINT_CLIENT_SECRET: 
+        required: true
+      GH_PAT: 
+        required: true
+    inputs:
+      mule-env: 
+        description: The MuleSoft environment that the deployment will be deployed to
+        required: true
+        type: string
+      tag-name:
+        description: The tag name used in the build stage so the release can be fetched
+        required: true
+        type: string
+
+        
+jobs:
+  deploy:
+  - name: Retrieve .jar file for deployment
+    uses: joutvhu/get-release@v1
+    with:
+      tag_name: ${{ inputs.tag-name }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  - name: list files
+    run: ls -la
