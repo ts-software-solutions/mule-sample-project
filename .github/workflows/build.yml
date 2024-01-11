@@ -188,4 +188,4 @@ jobs:
       uses: AButler/upload-release-assets@v3.0
       with:
         files: ${{ steps.file_properties.outputs.FILE_PATH }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.GH_PAT }}
