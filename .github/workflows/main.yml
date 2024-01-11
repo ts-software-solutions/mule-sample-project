@@ -5,12 +5,12 @@ on:
 
 jobs:
   Run-Tests:
-    if: ${{ && GITHUB.ref_name != 'main' }}
+    if: ${{ GITHUB.ref_name != 'main' }}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
 
   Build-And-Publish:
-    if: ${{ && GITHUB.ref_name == 'main' }}
+    if: ${{ GITHUB.ref_name == 'main' }}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
     with:

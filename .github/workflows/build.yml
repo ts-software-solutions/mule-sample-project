@@ -124,6 +124,7 @@ jobs:
         echo $SHA_SHORT
 
     - name: Create tag if not exists
+      if: ${{ inputs.build-test == 'build' }}
       uses: richardsimko/update-tag@v1
       with:
         tag_name: early-access
