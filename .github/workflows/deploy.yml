@@ -47,6 +47,7 @@ jobs:
       run: |
         echo "SOURCE_CODE=$(ls -1 -d release_assets/*mule-sample-project*/)" >> $GITHUB_OUTPUT
         echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
+        ls ~
 
     - name: print variables
       run: |
