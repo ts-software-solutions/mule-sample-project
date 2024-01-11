@@ -35,7 +35,7 @@ jobs:
       with:
         version: 'tags/${{ inputs.tag-name }}'
         regex: true
-        file: "*\\.jar"
+        file: "*\.jar"
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: list files
