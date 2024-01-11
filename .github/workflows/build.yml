@@ -167,6 +167,7 @@ jobs:
       if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
       uses: liudonghua123/delete-release-action@v1
       with:
+        token: ${{ secrets.GH_PAT }}
         release_name: ${{ inputs.early-access-name }}
 
     - name: Create prerelease for early-access
