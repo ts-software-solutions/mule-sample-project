@@ -161,10 +161,10 @@ jobs:
         prerelease: true
 
     - name: Print previous id
-      run: echo "${{ steps.checkRelease.outputs.id }}"
+      run: echo "${{ steps.checkRelease.outputs.tag_name }}"
 
     - name: Delete the prerelease branch if it exists
-      if: ${{ steps.checkRelease.outputs.id == inputs.early-access-name }}
+      if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
       uses: liudonghua123/delete-release-action@v1
       with:
         release_name: ${{ inputs.early-access-name }}
