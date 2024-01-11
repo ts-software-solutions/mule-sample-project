@@ -138,7 +138,8 @@ jobs:
         echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
         echo "delimiter=target/"
         echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
-
+        echo $FILE_PATH
+        echo $FILE_NAME
       id: file_properties
 
 
