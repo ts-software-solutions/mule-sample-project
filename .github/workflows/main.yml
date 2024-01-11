@@ -1,4 +1,4 @@
-name: Main Configuration file for orchestration of pipeline
+name: Deployment Pipeline
 
 on:
   push:
