@@ -163,7 +163,7 @@ jobs:
     - name: Print previous id
       run: |
         echo "${{ steps.checkRelease.outputs.tag_name }}"
-        echo "${{ steps.file_properties.FILE_PATH }}"
+        echo "${{ steps.file_properties.outputs.FILE_NAME }}"
 
     - name: Delete the early-access release if an old one exists
       if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
