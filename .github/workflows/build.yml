@@ -123,9 +123,9 @@ jobs:
         echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo $SHA_SHORT
 
-    - name: Retrieve tag exists flag
-        uses: richardsimko/update-tag@v1
-        with:
-          tag_name: early-access
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create tag if not exists
+      uses: richardsimko/update-tag@v1
+      with:
+        tag_name: early-access
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
