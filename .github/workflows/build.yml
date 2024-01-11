@@ -124,7 +124,6 @@ jobs:
       if: ${{ inputs.build-test == 'build' }}
       id: sha
       run: |
-        CURR_BRANCH=${{ GITHUB.ref_name }}
         echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo $SHA_SHORT
 
@@ -188,5 +187,5 @@ jobs:
       id: upload-release-asset 
       uses: AButler/upload-release-assets@v3.0
       with:
-        files: ${{ steps.file_properties.FILE_PATH }}
+        files: ${{ steps.file_properties.outputs.FILE_PATH }}
         repo-token: ${{ secrets.GITHUB_TOKEN }}
