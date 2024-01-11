@@ -1,0 +1,131 @@
+name: Test and build Jar File 
+
+on:
+  workflow_call:
+    secrets:
+      MULE_DEV_CRYPTO_KEY: 
+        required: true
+      MULE_EE_REPO_USERNAME: 
+        required: true
+      MULE_EE_REPO_PASSWORD: 
+        required: true
+      MULE_CLIENT_ID: 
+        required: true
+      MULE_CLIENT_SECRET: 
+        required: true
+      GH_PAT: 
+        required: true
+    inputs:
+      build-test: 
+        description: Specify whether you would like to build the jar file or just run unit tests
+        required: false
+        type: string
+        default: 'test'
+    outputs:
+      short-sha: 
+        description: Short Sha used for revision and release branch name
+        value: ${{ jobs.build-and-publish.outputs.short-sha }}
+      release-branch:
+        description: Branch name to be used for eventual deploy to production
+        value: ${{ jobs.build-and-publish.outputs.release-branch }}
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    outputs:
+      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
+    steps:
+    # Checkout current branch
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ GITHUB.ref }}
+        token: ${{ secrets.GH_PAT }}
+    
+    # Setup java and maven settings
+    - name: Set up JDK 8
+      uses: actions/setup-java@v3
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+        cache: maven
+    - name: Configure Maven settings
+      uses: whelk-io/maven-settings-xml-action@v21
+      with:
+        servers: >
+          [
+            {
+              "id": "anypoint-exchange-v3",
+              "username": "~~~Client~~~",
+              "password": "${{ secrets.MULE_CLIENT_ID }}~?~${{ secrets.MULE_CLIENT_SECRET }}"
+            },
+            {
+              "id": "avio-mulesoft-ee-releases",
+              "username": "${{ secrets.MULE_EE_REPO_USERNAME }}",
+              "password": "${{ secrets.MULE_EE_REPO_PASSWORD }}"
+            }
+          ]
+        mirrors: >
+          [
+            {
+              "id": "avio-mulesoft-ee-releases",
+              "name": "avio-mulesoft-ee-releases",
+              "mirrorOf": "MuleRepository",
+              "url": "https://devops.avioconsulting.com/nexus/repository/mulesoft-ee-releases/"
+            }
+          ]
+        repositories: >
+          [
+            { 
+              "id": "MuleRepository", 
+              "name": "MuleRepository", 
+              "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/", 
+              "releases": { 
+                "enabled": "true" 
+              }, 
+              "snapshots": { 
+                "enabled": "true" 
+              } 
+            }
+          ]
+        active_profiles: >
+          [
+            "github"
+          ]
+        output_file: .m2/settings.xml
+
+    
+    #### *** If inputs.build-test == 'test' *** ####  
+    # Run MUnit Tests
+    - name: Run Unit Tests
+      if: ${{ inputs.build-test == 'test' }}
+      run: mvn clean test -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
+
+    - name: |
+        Ensure all branches are within convention. Branches should be prefixed by feature, fix, or hotfix followed by '/'
+        branches should include the user that completed the work's github username in all lowercase followed by '/'
+        Finally a short description of the work done in snake case
+        ex: feature/tannersherman/add-new-field-to-addresses
+      if: ${{ inputs.build-test == 'test' }}
+      uses: deepakputhraya/action-branch-name@master
+      with:
+        regex: '(feature|fix|hotfix)\/([a-z]{1,15})\/([a-z0-9-]{1,50})|release\-[a-zA-Z0-9]{7}' # Regex the branch should match. This example enforces grouping
+        allowed_prefixes: '' # All branches should start with the given prefix
+        ignore: main # Ignore exactly matching branch names from convention
+        min_length: 5 # Min length of the branch name
+        max_length: 100 # Max length of the branch name
+
+    #### *** If inputs.build-test == 'build' *** ####
+    - name: Get short commit sha for revision
+      if: ${{ inputs.build-test == 'build' }}
+      id: sha
+      run: |
+        CURR_BRANCH=${{ GITHUB.ref_name }}
+        echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        echo $SHA_SHORT
+
+    - name: Retrieve tag exists flag
+        uses: richardsimko/update-tag@v1
+        with:
+          tag_name: early-access
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
