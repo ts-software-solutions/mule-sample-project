@@ -21,6 +21,11 @@ on:
         required: false
         type: string
         default: 'test'
+      early-access-name: 
+        description: The name of the tag and release of the prerelease that will be created
+        required: false
+        type: string
+        default: 'early-access'
     outputs:
       short-sha: 
         description: Short Sha used for revision and release branch name
@@ -123,10 +128,45 @@ jobs:
         echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         echo $SHA_SHORT
 
+    # Build Jar File 
+    - name: Build Jar
+      if: ${{ inputs.build-test == 'build' }}
+      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
+
+    - name: Get Jar Full File Name
+      run: |
+        echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
+        echo "delimiter=target/"
+        echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
+
+      id: file_properties
+
+
     - name: Create tag if not exists
       if: ${{ inputs.build-test == 'build' }}
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: early-access
+        tag_name: ${{ inputs.early-access-name }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create prerelease for early-access
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ inputs.early-access-name }}
+        release_name: ${{ inputs.early-access-name }}
+        draft: false
+        prerelease: true
+    
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.file_properties.FILE_PATH }}
+        asset_name: ${{ steps.file_properties.FILE_NAME }}
