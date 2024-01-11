@@ -30,12 +30,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: get jar file
+    - name: Get deployable Jar file from Release
       uses: dsaltares/fetch-gh-release-asset@master
       with:
         version: 'tags/${{ inputs.tag-name }}'
         regex: true
-        file: "*\.jar"
+        file: "*jar"
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: list files
