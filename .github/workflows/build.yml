@@ -166,11 +166,10 @@ jobs:
 
     - name: Delete the prerelease branch if it exists
       if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
-      uses: liudonghua123/delete-release-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      uses: cb80/delrel@latest
       with:
-        release_name: ${{ inputs.early-access-name }}
+        tag: ${{ inputs.early-access-name }}
+        token: ${{ secrets.GH_PAT }}
 
     - name: Create prerelease for early-access
       id: create_release
