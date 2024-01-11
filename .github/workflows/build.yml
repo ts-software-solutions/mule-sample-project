@@ -182,10 +182,14 @@ jobs:
         release_name: ${{ inputs.early-access-name }}
         draft: false
         prerelease: true
-    
-    - name: Upload Jar to Release
+
+    - name: Upload Release Asset
       id: upload-release-asset 
-      uses: AButler/upload-release-assets@v3.0
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
-        files: ${{ steps.file_properties.outputs.FILE_PATH }}
-        repo-token: ${{ secrets.GH_PAT }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
+        asset_name: ${{ steps.file_properties.outputs.FILE_NAME }}
+        asset_content_type: application/java-archive
