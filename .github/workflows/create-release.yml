@@ -6,8 +6,8 @@ on:
       GH_PAT: 
         required: true
     inputs:
-      tag-name: 
-        description: name of which to create the tag
+      early-access-name: 
+        description: Name of the early release tag name
         required: true
         type: string
 
@@ -17,10 +17,11 @@ jobs:
     outputs:
       short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
     steps:
+    
     - name: Checkout early-access tag
       uses: actions/checkout@v4
       with:
-        ref: "${{ inputs.tag-name }}"
+        ref: "${{ inputs.early-access-name}}"
         fetch-depth: 0
         fetch-tags: true
 
@@ -36,8 +37,25 @@ jobs:
         tag_name: ${{ steps.sha.outputs.SHA_SHORT }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Get Jar file from early-release prereleasee
+      uses: robinraju/release-downloader@v1.8
+      with: 
+        tag: "${{ inputs.early-access-name}}"
+        fileName: "*.jar"
+        tarBall: false
+        zipBall: false
+        out-file-path: "release_assets"
+        extract: false
+        token: ${{ secrets.GH_PAT }}
 
+    - name: Get path to jar
+      id: get_paths
+      run: |
+        echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
+    
     - name: Create official release
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,9 +65,20 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: Upload Deployable Jar as Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.get_paths.outputs.JAR_FILE }}
+        asset_name: mule-sample-project-1.0.0-${{ steps.sha.outputs.SHA_SHORT }}-mule-application.jar
+        asset_content_type: application/java-archive
+
     - name: Delete early-release tag and release
       uses: dev-drprasad/delete-tag-and-release@v1.0 
       with:
-        tag_name: ${{ inputs.tag-name }}
+        tag_name: ${{ inputs.early-access-name}}
         github_token: ${{ secrets.GH_PAT }} 
         delete_release: true
