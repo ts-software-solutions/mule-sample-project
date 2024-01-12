@@ -48,12 +48,12 @@ jobs:
         echo "SOURCE_CODE=$(ls -1 -d release_assets/*mule-sample-project*/)" >> $GITHUB_OUTPUT
         echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
 
-    - name: print variables
+    - name: Copy POM and Jar into working directory
       run: |
-        echo "${{ steps.get_paths.outputs.SOURCE_CODE }}"
-        echo "${{ steps.get_paths.outputs.JAR_FILE }}"
-        ls ~
+        cp ${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml .
+        cp ${{ steps.get_paths.outputs.JAR_FILE }} .
         pwd
+        ls
 
     - name: Set up JDK 8
       uses: actions/setup-java@v3
@@ -61,12 +61,10 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
-        cache-dependency-path: ./${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml
 
     - name: Deploy To specified environment based on profile
       run: |
         mvn mule:deploy -e -P ${{ inputs.mule-env }} \
-        -f ./${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml \
         -Dmule.key=${{ secrets.CRYPTO_KEY }} \
         -DartifactPath=~/${{ steps.get_paths.outputs.JAR_FILE }} \
         -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} \
