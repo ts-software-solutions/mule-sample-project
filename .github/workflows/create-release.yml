@@ -1,0 +1,55 @@
+name: Create official tag and Release
+
+on:
+  workflow_call:
+    secrets:
+      GH_PAT: 
+        required: true
+    inputs:
+      tag-name: 
+        description: name of which to create the tag
+        required: true
+        type: string
+
+jobs:
+  create-tag-and-release:
+    runs-on: ubuntu-latest
+    outputs:
+      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
+    steps:
+    - name: Checkout early-access tag
+    - uses: actions/checkout@v4
+      with:
+        ref: "tags/${{ inputs.tag-name }}"
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Get short commit for new tag name
+      id: sha
+      run: |
+        echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        echo $SHA_SHORT
+
+    - name: Create tag
+      uses: richardsimko/update-tag@v1
+      with:
+        tag_name: ${{ steps.sha.outputs.short-sha }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create official release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.sha.outputs.short-sha }}
+        release_name: ${{ steps.sha.outputs.short-sha }}
+        draft: false
+        prerelease: false
+
+    - name: Delete early-release tag and release
+      uses: dev-drprasad/delete-tag-and-release@v1.0 
+      with:
+        tag_name: ${{ inputs.tag-name }}
+        github_token: ${{ secrets.GH_PAT }} 
+        delete_release: true
