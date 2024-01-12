@@ -66,5 +66,11 @@ jobs:
       tag-name: 'early-access'
       mule-env: 'PROD'
 
+  Create-Release:
+    if: ${{ github.event_name == 'release' }}
+    uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/create-release.yml@main
+    needs: [Deploy-To-Dev, Deploy-To-UAT, Deploy-To-PROD]
+    secrets: inherit
+    with:
+      tag-name: 'early-access'
 
-    # Create offical tag and release
