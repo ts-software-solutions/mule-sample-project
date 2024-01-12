@@ -72,5 +72,5 @@ jobs:
     needs: [Deploy-To-Dev, Deploy-To-UAT, Deploy-To-PROD]
     secrets: inherit
     with:
-      existing-tag-name: 'early-access'
+      early-access-name: 'early-access'
 
