@@ -18,7 +18,7 @@ jobs:
       short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
     steps:
     - name: Checkout early-access tag
-    - uses: actions/checkout@v4
+      uses: actions/checkout@v4
       with:
         ref: "tags/${{ inputs.tag-name }}"
         fetch-depth: 0
