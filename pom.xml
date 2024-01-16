@@ -15,6 +15,7 @@
 		<app.runtime>4.4.0-20230320</app.runtime>
 		<mule.maven.plugin.version>3.8.2</mule.maven.plugin.version>
 		<munit.version>2.3.14</munit.version>
+		<mule-deploy-maven-plugin.version>1.2.0</mule-deploy-maven-plugin.version>
 		<muleApplicationName>${project.artifactId}-v1-${mule.env}</muleApplicationName>
 		<revision>local</revision>
 		<artifactPath>dummy</artifactPath>
@@ -84,6 +85,20 @@
 					</coverage>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.avioconsulting.mule</groupId>
+                <artifactId>mule-deploy-maven-plugin</artifactId>
+                <version>${mule.deploy.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>deployment</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>		
 		</plugins>
 	</build>
 

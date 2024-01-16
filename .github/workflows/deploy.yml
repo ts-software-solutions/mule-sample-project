@@ -59,6 +59,20 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+        
+    - name: Deploy To specified environment based on profile
+      run: |
+        mule-deploy:deploy \
+        -DmuleDeploy.env=${{ inputs.mule-env }} \
+        -DmuleDeploy.appArtifact=${{ steps.get_paths.outputs.JAR_FILE }} \
+        -Danypoint.connected-app.id=${{ secrets.MULE_CLIENT_ID }} \
+        -Danypoint.connected-app.secret=${{ secrets.MULE_CLIENT_SECRET }} \
+        -DmuleDeploy.cryptoKey=${{ secrets.CRYPTO_KEY }} \
+        -DmuleDeploy.autoDiscClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
+        -DmuleDeploy.autoDiscClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
+        -Dgroovy.file=./muleDeploy.groovy
+
+
     # - name: Deploy To specified environment based on profile
     #   run: |
     #     mvn mule:deploy -e -P ${{ inputs.mule-env }} \
