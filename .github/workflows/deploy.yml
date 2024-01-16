@@ -63,7 +63,7 @@ jobs:
 
     - name: Deploy To specified environment based on profile
       run: |
-        mule-deploy:deploy \
+        mvn mule-deploy:deploy \
         -e \
         -DmuleDeploy.env=${{ inputs.mule-env }} \
         -DmuleDeploy.appArtifact=${{ steps.get_paths.outputs.JAR_FILE }} \
