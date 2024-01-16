@@ -51,6 +51,7 @@ jobs:
     - name: Copy POM into working directory
       run: |
         cp ${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml .
+        cp ${{ steps.get_paths.outputs.SOURCE_CODE }}/muleDeploy.groovy .
 
     - name: Set up JDK 8
       uses: actions/setup-java@v3
@@ -71,7 +72,7 @@ jobs:
         -DmuleDeploy.cryptoKey=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.autoDiscClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
         -DmuleDeploy.autoDiscClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
-        -Dgroovy.file=${{ steps.get_paths.outputs.SOURCE_CODE }}/muleDeploy.groovy
+        -Dgroovy.file=muleDeploy.groovy
 
 
     # - name: Deploy To specified environment based on profile

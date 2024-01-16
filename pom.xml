@@ -91,10 +91,10 @@
                 <version>${mule.deploy.plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>deployment</id>
-                        <phase>deploy</phase>
+                        <id>validate</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>deploy</goal>
+                            <goal>validate</goal>
                         </goals>
                     </execution>
                 </executions>
