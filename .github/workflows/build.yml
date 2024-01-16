@@ -129,7 +129,13 @@ jobs:
 
     - name: Build Jar
       if: ${{ inputs.build-test == 'build' }}
-      run: mvn clean package -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} -Drevision=${{ steps.sha.outputs.SHA_SHORT }}
+      run: |
+        mvn clean package \
+        -e -U -s ./.m2/settings.xml \
+        -Dmule.env=DEV \
+        -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} \
+        -Drevision=${{ steps.sha.outputs.SHA_SHORT }} \
+        -DmuleDeploy.appArtifact=./target/mule-sample-project-1.0.0-${{ steps.sha.outputs.SHA_SHORT }}-mule-application.jar
 
     - name: Get Jar Full File Name
       run: |
