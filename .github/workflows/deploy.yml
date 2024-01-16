@@ -72,6 +72,7 @@ jobs:
         -DmuleDeploy.cryptoKey=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.autoDiscClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
         -DmuleDeploy.autoDiscClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
+        -DmuleDeploy.anypointOrganizationName='AVIO Sandbox'
         -Dgroovy.file=muleDeploy.groovy
 
 
