@@ -73,4 +73,5 @@ jobs:
     secrets: inherit
     with:
       early-access-name: 'early-access'
+      official-release-name: ${{ needs.Deploy-To-Prod.outputs.deployed-version }}
 

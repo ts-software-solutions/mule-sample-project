@@ -24,12 +24,22 @@ on:
         description: The tag name used in the build stage so the release can be fetched
         required: true
         type: string
+    outputs:
+      deployed-version: 
+        description: The Version number from the pom after the deployment completed
+        value: ${{ jobs.deploy.outputs.pom-version }}
+
 
         
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      pom-version: ${{ steps.pom-version.outputs.VERSION }} 
     steps:
+    outputs:
+      pom-version: 
+
 
     - name: Get Files from early-access release and extract zip file
       uses: robinraju/release-downloader@v1.8
@@ -76,12 +86,11 @@ jobs:
         -Dgroovy.file=muleDeploy.groovy
 
 
-    # - name: Deploy To specified environment based on profile
-    #   run: |
-    #     mvn mule:deploy -e -P ${{ inputs.mule-env }} \
-    #     -Dmule.key=${{ secrets.CRYPTO_KEY }} \
-    #     -DartifactPath=${{ steps.get_paths.outputs.JAR_FILE }} \
-    #     -DconnectedAppClientId=${{ secrets.MULE_CLIENT_ID }} \
-    #     -DconnectedAppClientSecret=${{ secrets.MULE_CLIENT_SECRET }} \
-    #     -DanypointPlatformClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
-    #     -DanypointPlatformClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} 
+    - name: Get POM version for Output
+      id: pom-version
+      run: |
+        echo VERSION=$(mvn -q \
+        -Dexec.executable="echo" \
+        -Dexec.args='${project.version}' \
+        --non-recursive \
+        org.codehaus.mojo:exec-maven-plugin:1.6.0:exec) >> $GITHUB_OUTPUT

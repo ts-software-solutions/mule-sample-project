@@ -26,19 +26,10 @@ on:
         required: false
         type: string
         default: 'early-access'
-    outputs:
-      short-sha: 
-        description: Short Sha used for revision and release branch name
-        value: ${{ jobs.build-and-publish.outputs.short-sha }}
-      release-branch:
-        description: Branch name to be used for eventual deploy to production
-        value: ${{ jobs.build-and-publish.outputs.release-branch }}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    outputs:
-      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
     steps:
     # Checkout current branch
     - uses: actions/checkout@v4
@@ -53,6 +44,7 @@ jobs:
         java-version: '8'
         distribution: 'temurin'
         cache: maven
+   
     - name: Configure Maven settings
       uses: whelk-io/maven-settings-xml-action@v21
       with:
@@ -120,12 +112,17 @@ jobs:
         max_length: 100 # Max length of the branch name
 
     #### *** If inputs.build-test == 'build' *** ####
-    - name: Get short commit sha for revision
+    - name: Set Version Number based on Date and build number
       if: ${{ inputs.build-test == 'build' }}
-      id: sha
+      id: version
       run: |
-        echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo $SHA_SHORT
+        echo "BUILD_NUMBER=${{ github.run_number }}"
+        echo "CURR_DATE=$(date +'%d%m%Y')"
+        echo "VERSION=${CURR_DATE}${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+    
+    - name: Set Pom Version
+      if: ${{ inputs.build-test == 'build' }}
+      run: mvn versions:set -DnewVersion="${{ steps.version.outputs.VERSION }}"
 
     - name: Build Jar
       if: ${{ inputs.build-test == 'build' }}
@@ -134,8 +131,7 @@ jobs:
         -e -U -s ./.m2/settings.xml \
         -Dmule.env=DEV \
         -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} \
-        -Drevision=${{ steps.sha.outputs.SHA_SHORT }} \
-        -DmuleDeploy.appArtifact=./target/mule-sample-project-1.0.0-${{ steps.sha.outputs.SHA_SHORT }}-mule-application.jar
+        -DmuleDeploy.appArtifact=./target/mule-sample-project-1.0.${{ steps.version.outputs.VERSION }}-mule-application.jar
 
     - name: Get Jar Full File Name
       run: |
@@ -188,5 +184,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
-        asset_name: mule-sample-project-1.0.0-${{ steps.sha.outputs.SHA_SHORT }}-mule-application.jar
+        asset_name: mule-sample-project-1.0.${{ steps.version.outputs.VERSION }}-mule-application.jar
         asset_content_type: application/java-archive

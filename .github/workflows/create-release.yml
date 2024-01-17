@@ -10,31 +10,21 @@ on:
         description: Name of the early release tag name
         required: true
         type: string
+      official-release-name: 
+        description: Name of the official release and tag after prod deployment
+        required: true
+        type: string
+
 
 jobs:
   create-tag-and-release:
     runs-on: ubuntu-latest
-    outputs:
-      short-sha: ${{ steps.sha.outputs.SHA_SHORT }}  
     steps:
-    
-    - name: Checkout early-access tag
-      uses: actions/checkout@v4
-      with:
-        ref: "${{ inputs.early-access-name}}"
-        fetch-depth: 0
-        fetch-tags: true
-
-    - name: Get short commit for new tag name
-      id: sha
-      run: |
-        echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-        echo $SHA_SHORT
 
     - name: Create tag
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: ${{ steps.sha.outputs.SHA_SHORT }}
+        tag_name: ${{ inputs.official-release-name }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
@@ -52,7 +42,10 @@ jobs:
     - name: Get path to jar
       id: get_paths
       run: |
-        echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
+        echo FILE=$(ls release_assets/*.jar)
+        echo JAR_PATH=$FILE >> $GITHUB_OUTPUT
+        echo delimiter=release_assets/
+        echo JAR_NAME=${FILE#*$delimiter} >> $GITHUB_OUTPUT
     
     - name: Create official release
       id: create_release
@@ -60,8 +53,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.sha.outputs.SHA_SHORT }}
-        release_name: ${{ steps.sha.outputs.SHA_SHORT }}
+        tag_name: ${{ inputs.official-release-name }}
+        release_name: ${{ inputs.official-release-name }}
         draft: false
         prerelease: false
 
@@ -72,8 +65,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.get_paths.outputs.JAR_FILE }}
-        asset_name: mule-sample-project-1.0.0-${{ steps.sha.outputs.SHA_SHORT }}-mule-application.jar
+        asset_path: ${{ steps.get_paths.outputs.JAR_PATH }}
+        asset_name: "${{ steps.get_paths.outputs.JAR_NAME }}"
         asset_content_type: application/java-archive
 
     - name: Delete early-release tag and release
