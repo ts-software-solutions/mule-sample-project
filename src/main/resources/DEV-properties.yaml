@@ -1,6 +1,10 @@
 http:
   port: "8081"
 
+auto-discovery:
+  api-id: "12345678"
+
+
 plain:
   text: 
     property: "This is an example of a plain text property"

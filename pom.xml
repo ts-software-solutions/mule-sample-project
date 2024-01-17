@@ -4,7 +4,7 @@
 
 	<groupId>com.mycompany</groupId>
 	<artifactId>mule-sample-project</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1701202481</version>
 	<packaging>mule-application</packaging>
 
 	<name>mule-sample-project</name>
@@ -19,11 +19,8 @@
 		<muleApplicationName>${project.artifactId}-v1-${mule.env}</muleApplicationName>
 		<revision>local</revision>
 		<artifactPath>dummy</artifactPath>
-		<mule.key>dummy</mule.key>
-        <connectedAppClientId>dummy</connectedAppClientId>
-        <connectedAppClientSecret>dummy</connectedAppClientSecret>
-	  	<anypointPlatformClientId>dummy</anypointPlatformClientId>
-	  	<anypointPlatformClientSecret>dummy</anypointPlatformClientSecret>
+		<crypto.key>dummy</crypto.key>
+		<env>dummy</env>
 	</properties>
 
 	<build>
@@ -40,26 +37,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<classifier>mule-application</classifier>
-				    <cloudHubDeployment>
-				      <uri>https://anypoint.mulesoft.com</uri>
-				      <muleVersion>${app.runtime}</muleVersion>
-				      <businessGroup>AVIO Sandbox</businessGroup>
-			          <connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
-			          <connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
-			          <connectedAppGrantType>client_credentials</connectedAppGrantType>
-				      <applicationName>${muleApplicationName}</applicationName>
-				      <artifact>${artifactPath}</artifact>
-				      <environment>${environment}</environment>
-				      <region>${region}</region>
-				      <workers>${workers}</workers>
-				      <workerType>${workerType}</workerType>
-					  <properties>
-					  	<mule.env>${mule.env}</mule.env>
-					  	<mule.key>${mule.key}</mule.key>
-					  	<anypoint.platform.client_id>${anypointPlatformClientId}</anypoint.platform.client_id>
-					  	<anypoint.platform.client_secret>${anypointPlatformClientSecret}</anypoint.platform.client_secret>
-					  </properties>
-				    </cloudHubDeployment>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -106,7 +83,7 @@
 		<profile>
 			<id>DEV</id>
 			<properties>
-				<mule.env>DEV</mule.env>
+				<env>DEV</env>
 				<workers>1</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
@@ -116,7 +93,7 @@
 		<profile>
 			<id>UAT</id>
 			<properties>
-				<mule.env>UAT</mule.env>
+				<env>UAT</env>
 				<workers>1</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
@@ -126,7 +103,7 @@
 		<profile>
 			<id>PROD</id>
 			<properties>
-				<mule.env>PROD</mule.env>
+				<env>PROD</env>
 				<workers>2</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
