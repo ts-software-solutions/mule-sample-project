@@ -72,7 +72,11 @@ jobs:
       run: |
         mvn mule-deploy:deploy \
         -e \
-        -P ${{ inputs.mule-env }} \
+        -Dmule.env=${{ inputs.mule-env }} \
+        -Dworkers=1 \
+        -DworkerSize=MICRO \
+        -Dregion=us-east-2 \
+        -Denvironment=${{ inputs.mule-env }} \
         -Dmule.key=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.env=${{ inputs.mule-env }} \
         -DmuleDeploy.appArtifact=${{ steps.get_paths.outputs.JAR_FILE }} \
