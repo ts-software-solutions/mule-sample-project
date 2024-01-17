@@ -95,7 +95,7 @@ jobs:
     # Run MUnit Tests
     - name: Run Unit Tests
       if: ${{ inputs.build-test == 'test' }}
-      run: mvn clean test -e -U -s ./.m2/settings.xml -Dmule.env=DEV -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
+      run: mvn clean test -e -U -s ./.m2/settings.xml -Denv=DEV -Dcrypto.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
 
     - name: |
         Ensure all branches are within convention. Branches should be prefixed by feature, fix, or hotfix followed by '/'
@@ -118,6 +118,8 @@ jobs:
       run: |
         echo BUILD_NUMBER=${{ github.run_number }} >> $GITHUB_OUTPUT
         echo CURR_DATE=$(date +'%d%m%Y') >> $GITHUB_OUTPUT
+
+        1.0.1701202488
     
     - name: Set Pom Version
       if: ${{ inputs.build-test == 'build' }}
