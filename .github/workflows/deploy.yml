@@ -71,11 +71,7 @@ jobs:
     - name: Deploy To specified environment based on profile
       run: |
         mvn mule-deploy:deploy \
-        -e \
-        -Dmule.env=${{ inputs.mule-env }} \
-        -Dworkers=1 \
-        -DworkerSize=MICRO \
-        -Dregion=us-east-2 \
+        -e -P ${{ inputs.mule-env }} \
         -Denvironment=${{ inputs.mule-env }} \
         -Dmule.key=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.env=${{ inputs.mule-env }} \
@@ -85,8 +81,8 @@ jobs:
         -DmuleDeploy.cryptoKey=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.autoDiscClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
         -DmuleDeploy.autoDiscClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
-        -Danypoint.org.name="AVIO Sandbox" \
-        -Dgroovy.file=muleDeploy.groovy
+        -Danypoint.org.name="AVIO Sandbox" 
+
 
 
     - name: Get POM version for Output
