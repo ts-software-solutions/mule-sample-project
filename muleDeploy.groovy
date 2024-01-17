@@ -4,7 +4,7 @@ muleDeploy {
 
     apiSpecification {
         name 'Mule Sample Project TSS'
-        exchangeAssetId 'Mule Sample Project TSS-spec'
+        exchangeAssetId 'mule-sample-project-tss-spec'
     }
 
     policies {
