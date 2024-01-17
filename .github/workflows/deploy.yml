@@ -72,6 +72,8 @@ jobs:
       run: |
         mvn mule-deploy:deploy \
         -e \
+        -P ${{ inputs.mule-env }} \
+        -Dmule.key=${{ secrets.CRYPTO_KEY }} \
         -DmuleDeploy.env=${{ inputs.mule-env }} \
         -DmuleDeploy.appArtifact=${{ steps.get_paths.outputs.JAR_FILE }} \
         -Danypoint.connected-app.id=${{ secrets.MULE_CLIENT_ID }} \

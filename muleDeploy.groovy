@@ -23,6 +23,6 @@ muleDeploy {
             clientId params.autoDiscClientId
             clientSecret params.autoDiscClientSecret
         }
-        cloudHubAppPrefix 'OIA'
+        cloudHubAppPrefix 'tss'
     }
 }
