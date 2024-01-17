@@ -37,9 +37,6 @@ jobs:
     outputs:
       pom-version: ${{ steps.pom-version.outputs.VERSION }} 
     steps:
-    outputs:
-      pom-version: 
-
 
     - name: Get Files from early-access release and extract zip file
       uses: robinraju/release-downloader@v1.8
