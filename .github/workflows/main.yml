@@ -37,7 +37,7 @@ jobs:
       mule-env: 'DEV'
   
   # Deploy-To-UAT:
-  #   if: ${{ github.event_name == 'release' && github.event.release.name == 'early-release' }}
+  #   if: ${{ github.event_name == 'release' }}
   #   uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
   #   needs: [Deploy-To-Dev]
   #   secrets:
@@ -52,7 +52,7 @@ jobs:
   #     mule-env: 'UAT'
 
   # Deploy-To-Prod:
-  #   if: ${{ github.event_name == 'release' && github.event.release.name == 'early-release' }}
+  #   if: ${{ github.event_name == 'release' }}
   #   uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
   #   needs: [Deploy-To-Dev, Deploy-To-UAT]
   #   secrets:
@@ -67,7 +67,7 @@ jobs:
   #     mule-env: 'PROD'
 
   Create-Release:
-    if: ${{ github.event_name == 'release' && github.event.release.name == 'early-release' }}
+    if: ${{ github.event_name == 'release' }}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/create-release.yml@main
     needs: [Deploy-To-Dev]
     secrets: inherit
