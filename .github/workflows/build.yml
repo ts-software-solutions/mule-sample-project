@@ -128,8 +128,8 @@ jobs:
       run: |
         mvn clean package \
         -e -U -s ./.m2/settings.xml \
-        -Dmule.env=DEV \
-        -Dmule.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} \
+        -Denv=DEV \
+        -Dcrypto.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} \
         -DmuleDeploy.appArtifact=./target/mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
 
     - name: Get Jar Full File Name
