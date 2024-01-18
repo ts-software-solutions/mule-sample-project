@@ -50,9 +50,8 @@ jobs:
       id: get_paths
       run: |
         echo FILE=$(ls release_assets/*.jar)
+        echo $FILE
         echo JAR_PATH=$FILE >> $GITHUB_OUTPUT
-        echo delimiter=release_assets/
-        echo JAR_NAME=${FILE#*$delimiter} >> $GITHUB_OUTPUT
     
     - name: Create official release
       id: create_release
@@ -72,8 +71,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: "${{ steps.get_paths.outputs.JAR_PATH }}"
-        asset_name: "${{ steps.get_paths.outputs.JAR_NAME }}"
+        asset_path: ${{ steps.get_paths.outputs.JAR_PATH }}
+        asset_name: mule-sample-project-${{ inputs.official-release-name }}-mule-application.jar
         asset_content_type: application/java-archive
 
     - name: Delete early-release tag and release
