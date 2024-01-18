@@ -86,3 +86,4 @@ jobs:
       run: |
         echo FILE="${{ steps.get_paths.outputs.JAR_FILE }}"
         echo VERSION=$(echo "$FILE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') >> $GITHUB_OUTPUT
+        echo $VERSION

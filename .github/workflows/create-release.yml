@@ -28,6 +28,9 @@ jobs:
         fetch-depth: 0
         fetch-tags: true
 
+    - name echo release name
+      run: echo ${{ inputs.official-release-name }}
+
     - name: Create tag
       uses: richardsimko/update-tag@v1
       with:
