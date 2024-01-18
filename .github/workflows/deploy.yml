@@ -26,8 +26,8 @@ on:
         type: string
     outputs:
       deployed-version: 
-        description: The Version number from the pom after the deployment completed
-        value: ${{ jobs.deploy.outputs.pom-version }}
+        description: The Version number that was deployed
+        value: ${{ jobs.deploy.outputs.deployed-version }}
 
 
         
@@ -35,7 +35,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-      pom-version: ${{ steps.pom-version.outputs.VERSION }} 
+      deployed-version: ${{ steps.deployed-version.outputs.VERSION }} 
     steps:
 
     - name: Get Files from early-access release and extract zip file
@@ -78,14 +78,11 @@ jobs:
     #     -Danypoint.connected-app.secret=${{ secrets.MULE_CLIENT_SECRET }} \
     #     -DmuleDeploy.cryptoKey=${{ secrets.CRYPTO_KEY }} \
     #     -DmuleDeploy.autoDiscClientId=${{ secrets.ANYPOINT_CLIENT_ID }} \
-    #     -DmuleDeploy.autoDiscClientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
+    #     -DmuleDeploy.autoDiscClientSecret= ${{ secrets.ANYPOINT_CLIENT_SECRET }} \
     #     -Danypoint.org.name="AVIO Sandbox"
 
-    - name: Get POM version for Output
-      id: pom-version
+    - name: Get deployed version for Output from jar file
+      id: deployed-version
       run: |
-        echo VERSION=$(mvn -q \
-        -Dexec.executable="echo" \
-        -Dexec.args='${project.version}' \
-        --non-recursive \
-        org.codehaus.mojo:exec-maven-plugin:1.6.0:exec) >> $GITHUB_OUTPUT
+        echo FILE="${{ steps.get_paths.outputs.JAR_FILE }}"
+        echo VERSION=$(echo "$FILE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') >> $GITHUB_OUTPUT
