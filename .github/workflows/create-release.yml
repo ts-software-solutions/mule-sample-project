@@ -28,7 +28,7 @@ jobs:
         fetch-depth: 0
         fetch-tags: true
 
-    - name echo release name
+    - name: echo release name
       run: echo ${{ inputs.official-release-name }}
 
     - name: Create tag
