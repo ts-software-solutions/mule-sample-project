@@ -86,5 +86,5 @@ jobs:
       run: |
         FILE="${{ steps.get_paths.outputs.JAR_FILE }}"
         NUMBERS_EXTRACTED=$(echo "$FILE" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+') 
-        ECHO $NUMBERS_EXTRACTED
+        echo $NUMBERS_EXTRACTED
         echo VERSION=$NUMBERS_EXTRACTED >> $GITHUB_OUTPUT
