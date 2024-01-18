@@ -28,9 +28,6 @@ jobs:
         fetch-depth: 0
         fetch-tags: true
 
-    - name: echo release name
-      run: echo ${{ inputs.official-release-name }}
-
     - name: Create tag
       uses: richardsimko/update-tag@v1
       with:
@@ -75,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.get_paths.outputs.JAR_PATH }}
+        asset_path: "${{ steps.get_paths.outputs.JAR_PATH }}"
         asset_name: "${{ steps.get_paths.outputs.JAR_NAME }}"
         asset_content_type: application/java-archive
 
