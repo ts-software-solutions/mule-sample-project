@@ -24,7 +24,7 @@ jobs:
     - name: Create tag
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: ${{ inputs.official-release-name }}
+        tag_name: "${{ inputs.official-release-name }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
