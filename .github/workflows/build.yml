@@ -185,3 +185,25 @@ jobs:
         asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
         asset_name: mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
         asset_content_type: application/java-archive
+
+      - name: Publish to Maven Central
+        id: publish-to-maven-central
+        if: ${{ inputs.publish-maven-central }}
+        run: ./mvnw deploy -Drelease=true -DskipTests=true ${{ inputs.maven-args }}
+
+      - name: JReleaser full-Release
+        uses: jreleaser/release-action@v2
+        env:
+          JRELEASER_PROJECT_VERSION: 1.0.0
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          JRELEASER_VERSION: 1.6.0
+        with:
+          version: ${{ env.JRELEASER_VERSION }}
+          arguments: release 
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.file_properties.outputs.FILE_NAME }}
+          path: ${{ steps.file_properties.outputs.FILE_PATH }}
+          if-no-files-found: error
