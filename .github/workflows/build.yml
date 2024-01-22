@@ -139,57 +139,52 @@ jobs:
         echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
       id: file_properties
 
-    - name: Create tag if not exists, if it does, update
-      if: ${{ inputs.build-test == 'build' }}
-      uses: richardsimko/update-tag@v1
-      with:
-        tag_name: ${{ inputs.early-access-name }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Create tag if not exists, if it does, update
+    #   if: ${{ inputs.build-test == 'build' }}
+    #   uses: richardsimko/update-tag@v1
+    #   with:
+    #     tag_name: ${{ inputs.early-access-name }}
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check if early-access Release already exists
-      id: checkRelease
-      uses: cardinalby/git-get-release-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag: ${{ inputs.early-access-name }} 
-        prerelease: true
-        doNotFailIfNotFound: true
+    # - name: Check if early-access Release already exists
+    #   id: checkRelease
+    #   uses: cardinalby/git-get-release-action@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag: ${{ inputs.early-access-name }} 
+    #     prerelease: true
+    #     doNotFailIfNotFound: true
 
-    - name: Delete the early-access release if an old one exists
-      if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
-      uses: cb80/delrel@latest
-      with:
-        tag: ${{ inputs.early-access-name }}
-        token: ${{ secrets.GH_PAT }}
+    # - name: Delete the early-access release if an old one exists
+    #   if: ${{ steps.checkRelease.outputs.tag_name == inputs.early-access-name }}
+    #   uses: cb80/delrel@latest
+    #   with:
+    #     tag: ${{ inputs.early-access-name }}
+    #     token: ${{ secrets.GH_PAT }}
 
-    - name: Create prerelease for early-access
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ inputs.early-access-name }}
-        release_name: ${{ inputs.early-access-name }}
-        draft: false
-        prerelease: true
+    # - name: Create prerelease for early-access
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ inputs.early-access-name }}
+    #     release_name: ${{ inputs.early-access-name }}
+    #     draft: false
+    #     prerelease: true
 
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
-        asset_name: mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
-        asset_content_type: application/java-archive
-
-      - name: Publish to Maven Central
-        id: publish-to-maven-central
-        if: ${{ inputs.publish-maven-central }}
-        run: ./mvnw deploy -Drelease=true -DskipTests=true ${{ inputs.maven-args }}
+    # - name: Upload Release Asset
+    #   id: upload-release-asset 
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ${{ steps.file_properties.outputs.FILE_PATH }}
+    #     asset_name: mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
+    #     asset_content_type: application/java-archive
 
       - name: JReleaser full-Release
         uses: jreleaser/release-action@v2
