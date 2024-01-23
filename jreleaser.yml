@@ -19,9 +19,6 @@ project:
     version: 8
 
 release:
-  name: 'early-access'
-  prerelease:
-    enabled: true
   github:
     owner: 'ts-software-solutions'
     overwrite: true
