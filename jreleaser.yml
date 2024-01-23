@@ -54,11 +54,6 @@ release:
 checksum:
   individual: true
 
-signing:
-  active: ALWAYS
-  armored: true
-  mode: MEMORY
-
 distributions:
   mule-health-check-api:
     artifacts:
