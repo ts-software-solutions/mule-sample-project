@@ -53,8 +53,3 @@ release:
 
 checksum:
   individual: true
-
-distributions:
-  mule-health-check-api:
-    artifacts:
-      - path: target/mule-opentelemetry-module-{{projectVersion}}-mule-plugin.jar

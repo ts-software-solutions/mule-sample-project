@@ -139,12 +139,6 @@ jobs:
         echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
       id: file_properties
 
-    - name: Setup Java for JReleaser
-      uses: actions/setup-java@v3
-      with:
-        java-version: 11
-        distribution: 'temurin'
-
     - name: Run JReleaser
       uses: jreleaser/release-action@v2
       env:
