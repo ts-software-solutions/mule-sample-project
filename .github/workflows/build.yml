@@ -145,7 +145,7 @@ jobs:
         JRELEASER_PROJECT_VERSION: 1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
-        setup-java: false
+        setup-java: true
         version: 1.6.0
 
     - name: Upload artifact
