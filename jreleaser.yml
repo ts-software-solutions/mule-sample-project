@@ -23,7 +23,7 @@ release:
     owner: 'ts-software-solutions'
     overwrite: true
     draft: false
-    sign: true
+    sign: false
     releaseName: '{{tagName}}'
     skipTag: false
     milestone:
