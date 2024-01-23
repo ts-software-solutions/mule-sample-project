@@ -148,7 +148,7 @@ jobs:
     - name: Run JReleaser
       uses: jreleaser/release-action@v2
       env:
-        JRELEASER_PROJECT_VERSION: 1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}
+        JRELEASER_PROJECT_VERSION: 1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-SNAPSHOT
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         setup-java: false
