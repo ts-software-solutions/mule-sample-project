@@ -150,7 +150,6 @@ jobs:
       env:
         JRELEASER_PROJECT_VERSION: 1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        JRELEASER_CONFIG: ./jreleaser-snapshot.yml
       with:
         setup-java: false
         version: 1.6.0
