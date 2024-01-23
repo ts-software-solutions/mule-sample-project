@@ -147,11 +147,6 @@ jobs:
       with:
         setup-java: false
         version: 1.6.0
-        config: |
-          release:
-            name: ${{ inputs.early-access-name }}
-            prerelease:
-              enabled: true
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
