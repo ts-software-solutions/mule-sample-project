@@ -57,7 +57,7 @@ release:
         contributors:
           - 'GitHub'
 
-distributions:
-  app-jar:
-    artifacts:
-      - path: target/mule-sample-project-{{projectVersion}}-mule-plugin.jar
+# distributions:
+#   app-jar:
+#     artifacts:
+#       - path: target/mule-sample-project-{{tagName}}-mule-plugin.jar
