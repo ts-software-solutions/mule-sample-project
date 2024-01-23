@@ -157,6 +157,6 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ steps.file_properties.outputs.FILE_NAME }}
+        name: mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
         path: ${{ steps.file_properties.outputs.FILE_PATH }}
         if-no-files-found: error
