@@ -16,19 +16,19 @@ on:
 
 jobs:
   Run-Tests:
-    if: ${{ GITHUB.ref_name != 'main' && github.event_name != 'release'}}
+    if: ${{ GITHUB.ref_name != 'main'}}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
 
   Build-And-Publish:
-    if: ${{ GITHUB.ref_name == 'main' && github.event_name != 'release'}}
+    if: ${{ GITHUB.ref_name == 'main'}}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
     with:
       build-test: 'build'
 
   Deploy-To-Dev:
-    if: ${{ github.event_name == 'release' }}
+    if: ${{ GITHUB.ref_name == 'main'}}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
     secrets:
       CRYPTO_KEY: ${{ secrets.MULE_DEV_CRYPTO_KEY }} 
@@ -42,7 +42,7 @@ jobs:
       mule-env: 'DEV'
   
   # Deploy-To-UAT:
-  #   if: ${{ github.event_name == 'release' }}
+  #   if: ${{ GITHUB.ref_name == 'main'}}
   #   uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
   #   needs: [Deploy-To-Dev]
   #   secrets:
@@ -57,7 +57,7 @@ jobs:
   #     mule-env: 'UAT'
 
   # Deploy-To-Prod:
-  #   if: ${{ github.event_name == 'release' }}
+  #   if: ${{ GITHUB.ref_name == 'main'}}
   #   uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
   #   needs: [Deploy-To-Dev, Deploy-To-UAT]
   #   secrets:
