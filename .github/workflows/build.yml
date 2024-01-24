@@ -135,8 +135,6 @@ jobs:
     - name: Get Jar Full File Name
       run: |
         echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
-        echo "delimiter=target/"
-        echo "FILE_NAME=${FILE_PATH#*$delimiter}" >> $GITHUB_OUTPUT
       id: file_properties
 
     - name: Set up java for jreleaser

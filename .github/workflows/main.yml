@@ -8,7 +8,7 @@ on:
       - 'fix/*'
       - 'hotfix/*'
   release: 
-    types: [edited]
+    types: [published]
 
 jobs:
   Run-Tests:
@@ -74,5 +74,5 @@ jobs:
     secrets: inherit
     with:
       early-access-name: 'early-access'
-      official-release-name: ${{ needs.Deploy-To-Dev.outputs.deployed-version }}
+      version-to-release: ${{ needs.Deploy-To-Dev.outputs.deployed-version }}
 

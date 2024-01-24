@@ -10,7 +10,7 @@ on:
         description: Name of the early release tag name
         required: true
         type: string
-      official-release-name: 
+      version-to-release: 
         description: Name of the official release and tag after prod deployment
         required: true
         type: string
@@ -21,19 +21,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Set up java 11+ (needed for jreleaser)
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
     - name: Checkout early-access tag
       uses: actions/checkout@v4
       with:
         ref: "${{ inputs.early-access-name }}"
         fetch-depth: 0
         fetch-tags: true
-
-    - name: Create tag
-      uses: richardsimko/update-tag@v1
-      with:
-        tag_name: "${{ inputs.official-release-name }}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Get Jar file from early-release prereleasee
       uses: robinraju/release-downloader@v1.8
@@ -46,38 +45,20 @@ jobs:
         extract: false
         token: ${{ secrets.GH_PAT }}
 
-    - name: Get path to jar
+    - name: Move Jar to target directory for jreleaser
       id: get_paths
       run: |
         echo FILE=$(ls release_assets/*.jar)
         echo $FILE
-        echo JAR_PATH=$FILE >> $GITHUB_OUTPUT
-    
-    - name: Create official release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ inputs.official-release-name }}
-        release_name: ${{ inputs.official-release-name }}
-        draft: false
-        prerelease: false
+        mkdir target
+        cp $FILE ./target
+        ls target/
 
-    - name: Upload Deployable Jar as Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
+    - name: Run JReleaser
+      uses: jreleaser/release-action@v2
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        JRELEASER_PROJECT_VERSION: ${{ inputs.version-to-release }}
+        JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: release_assets/mule-sample-project-${{ inputs.official-release-name }}-mule-application.jar
-        asset_name: mule-sample-project-${{ inputs.official-release-name }}-mule-application.jar
-        asset_content_type: application/java-archive
-
-    - name: Delete early-release tag and release
-      uses: dev-drprasad/delete-tag-and-release@v1.0 
-      with:
-        tag_name: ${{ inputs.early-access-name}}
-        github_token: ${{ secrets.GH_PAT }} 
-        delete_release: true
+        setup-java: false
+        version: 1.6.0
