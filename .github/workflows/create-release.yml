@@ -50,8 +50,12 @@ jobs:
       run: |
         echo FILE=$(ls release_assets/*.jar)
         echo $FILE
+        cd release_assets/
+        echo FILE_NAME=$(ls *.jar)
+        echo $FILE_NAME
+        cd ..
         mkdir target
-        cp $FILE ./target
+        cp $FILE ./target/$FILE_NAME
         ls target/
 
     - name: Run JReleaser
