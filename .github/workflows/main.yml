@@ -7,8 +7,12 @@ on:
       - 'feature/*'
       - 'fix/*'
       - 'hotfix/*'
-#   release: 
-#     types: [published]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Version corresponding to the tag you wish to deploy (eg. 1.0.01192499)'
+        required: true
+        type: string
 
 jobs:
   Run-Tests:
