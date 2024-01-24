@@ -48,10 +48,10 @@ jobs:
     - name: Move Jar to target directory for jreleaser
       id: get_paths
       run: |
-        echo FILE=$(ls release_assets/*.jar)
+        FILE=$(ls release_assets/*.jar)
         echo $FILE
         cd release_assets/
-        echo FILE_NAME=$(ls *.jar)
+        FILE_NAME=$(ls *.jar)
         echo $FILE_NAME
         cd ..
         mkdir target
