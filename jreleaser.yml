@@ -24,13 +24,13 @@ release:
     overwrite: true
     draft: false
     sign: false
-    prerelease:
-      enabled: true
-    update:
-      enabled: true
-      sections:
-        - ASSETS
-    releaseName: 'early-access'
+    # prerelease:
+    #   enabled: true
+    # update:
+    #   enabled: true
+    #   sections:
+    #     - ASSETS
+    releaseName: '{{tagName}}'
     skipTag: false
     milestone:
       close: false
@@ -60,4 +60,4 @@ release:
 distributions:
   app-jar:
     artifacts:
-      - path: target/mule-sample-project-{{projectVersion}}-mule-application.jar
+      - path: target/mule-sample-project-{{tagName}}-mule-application.jar
