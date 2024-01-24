@@ -1,12 +1,12 @@
 name: Deployment Pipeline
 
-# on:
-#   push:
-#     branches:
-#       - 'main'
-#       - 'feature/*'
-#       - 'fix/*'
-#       - 'hotfix/*'
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/*'
+      - 'fix/*'
+      - 'hotfix/*'
 #   release: 
 #     types: [published]
 
