@@ -60,4 +60,4 @@ release:
 distributions:
   app-jar:
     artifacts:
-      - path: target/mule-sample-project-{{projectVersion}}-mule-plugin.jar
+      - path: target/mule-sample-project-{{projectVersion}}-mule-application.jar
