@@ -55,7 +55,7 @@ jobs:
         echo "SOURCE_CODE=$(ls -1 -d release_assets/*mule-sample-project*/)" >> $GITHUB_OUTPUT
         echo "JAR_FILE=$(ls release_assets/*.jar)" >> $GITHUB_OUTPUT
 
-    - name: Copy POM into working directory
+    - name: Copy necessary files into working directory
       run: |
         cp ${{ steps.get_paths.outputs.SOURCE_CODE }}/pom.xml .
         cp ${{ steps.get_paths.outputs.SOURCE_CODE }}/muleDeploy.groovy .
