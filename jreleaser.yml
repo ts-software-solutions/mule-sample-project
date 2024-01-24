@@ -24,12 +24,6 @@ release:
     overwrite: true
     draft: false
     sign: false
-    # prerelease:
-    #   enabled: true
-    # update:
-    #   enabled: true
-    #   sections:
-    #     - ASSETS
     releaseName: '{{tagName}}'
     skipTag: false
     milestone:
