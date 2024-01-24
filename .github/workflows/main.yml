@@ -1,14 +1,14 @@
 name: Deployment Pipeline
 
-on:
-  push:
-    branches:
-      - 'main'
-      - 'feature/*'
-      - 'fix/*'
-      - 'hotfix/*'
-  release: 
-    types: [published]
+# on:
+#   push:
+#     branches:
+#       - 'main'
+#       - 'feature/*'
+#       - 'fix/*'
+#       - 'hotfix/*'
+#   release: 
+#     types: [published]
 
 jobs:
   Run-Tests:
