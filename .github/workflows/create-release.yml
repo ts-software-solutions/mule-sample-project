@@ -27,10 +27,10 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Checkout early-access tag
+    - name: Checkout main branch
       uses: actions/checkout@v4
       with:
-        ref: "${{ inputs.early-access-name }}"
+        ref: "main"
         fetch-depth: 0
         fetch-tags: true
     
