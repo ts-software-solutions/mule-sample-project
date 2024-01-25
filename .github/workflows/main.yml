@@ -1,12 +1,10 @@
 name: Deployment Pipeline
 
 on:
+  # will kick off a build on any push. If it's a non-main branch then only tests will run
   push:
-    branches:
-      - 'main'
-      - 'feature/*'
-      - 'fix/*'
-      - 'hotfix/*'
+
+  # to kick off manually
   workflow_dispatch:
     inputs:
       tag:
@@ -21,10 +19,15 @@ on:
         type: boolean
         default: false
 
-
+  # for running tests when a PR is created
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'main'
 jobs:
   Run-Tests:
-    if: ${{ GITHUB.ref_name != 'main' && GITHUB.event_name == 'push'}}
+    if: ${{ (GITHUB.ref_name != 'main' && GITHUB.event_name == 'push') || (GITHUB.event_name == 'pull_request')}}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/build.yml@main
     secrets: inherit
 
