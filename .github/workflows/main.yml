@@ -66,7 +66,7 @@ jobs:
       mule-env: 'UAT'
 
   Deploy-To-Prod:
-    if: ${{ !cancelled() GITHUB.ref_name == 'main' && inputs.deploy-directly-to-prod}}
+    if: ${{ !cancelled() && GITHUB.ref_name == 'main' && inputs.deploy-directly-to-prod}}
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
     needs: [Deploy-To-Dev, Deploy-To-UAT]
     secrets:
