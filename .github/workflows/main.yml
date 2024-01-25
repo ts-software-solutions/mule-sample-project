@@ -36,7 +36,7 @@ jobs:
       build-test: 'build'
 
   Deploy-To-Dev:
-    if: ${{ !cansuccess() && celled() && GITHUB.ref_name == 'main' && !inputs.deploy-directly-to-prod }}
+    if: ${{ !cancelled() && success() &&  GITHUB.ref_name == 'main' && !inputs.deploy-directly-to-prod }}
     needs: [Build-And-Publish]
     uses: ts-software-solutions/ghf-mule-sample-project/.github/workflows/deploy.yml@main
     secrets:
