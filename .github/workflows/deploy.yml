@@ -35,14 +35,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: if tag-name is an empty string, it should be 'early-access'
+      id: set-tag-name
+      run: |
+        INPUT_TAG_NAME=${{ inputs.tag-name }}
+        CURR_BRANCH=${{ GITHUB.ref_name }}
+        if [[ $INPUT_TAG_NAME == "" ]]; then echo "TAG_NAME=early-access" >> $GITHUB_OUTPUT; else echo "TAG_NAME=$INPUT_TAG_NAME" >> $GITHUB_OUTPUT; fi
+        echo $TAG_NAME
+
     - name: Print the tag name to be deployed
       run: |
-        echo The tag to be deployed is ${{ inputs.tag-name }}
+        echo The tag to be deployed is ${{ steps.set-tag-name.outputs.TAG_NAME }}
 
     - name: Get Files from early-access release and extract zip file
       uses: robinraju/release-downloader@v1.8
       with: 
-        tag: "${{ inputs.tag-name }}"
+        tag: "${{ steps.set-tag-name.outputs.TAG_NAME }}"
         fileName: "*.jar"
         tarBall: false
         zipBall: true
