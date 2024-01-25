@@ -21,18 +21,20 @@ on:
         required: false
         type: string
         default: 'test'
-      early-access-name: 
-        description: The name of the tag and release of the prerelease that will be created
-        required: false
-        type: string
-        default: 'early-access'
+    outputs:
+      released-version: 
+        description: The Version number that was released
+        value: ${{ jobs.build-and-publish.outputs.released-version }}        
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    outputs:
+      released-version: ${{ steps.version.outputs.VERSION_OUTPUT }} 
     steps:
-    # Checkout current branch
-    - uses: actions/checkout@v4
+    
+    - name: checkout current branch
+      uses: actions/checkout@v4
       with:
         ref: ${{ GITHUB.ref }}
         token: ${{ secrets.GH_PAT }}
@@ -92,7 +94,7 @@ jobs:
 
     
     #### *** If inputs.build-test == 'test' *** ####  
-    # Run MUnit Tests
+    # Run MUnit Tests only
     - name: Run Unit Tests
       if: ${{ inputs.build-test == 'test' }}
       run: mvn clean test -e -U -s ./.m2/settings.xml -Denv=dev -Dcrypto.key=${{ secrets.MULE_DEV_CRYPTO_KEY }}
@@ -105,23 +107,24 @@ jobs:
       if: ${{ inputs.build-test == 'test' }}
       uses: deepakputhraya/action-branch-name@master
       with:
-        regex: '(feature|fix|hotfix)\/([a-z]{1,15})\/([a-z0-9-]{1,50})|release\-[a-zA-Z0-9]{7}' # Regex the branch should match. This example enforces grouping
-        allowed_prefixes: '' # All branches should start with the given prefix
-        ignore: main # Ignore exactly matching branch names from convention
-        min_length: 5 # Min length of the branch name
-        max_length: 100 # Max length of the branch name
+        regex: '(feature|fix|hotfix)\/([a-z]{1,15})\/([a-z0-9-]{1,30})|release\-[a-zA-Z0-9]{7}'
+        allowed_prefixes: ''
+        ignore: main
+        min_length: 5
+        max_length: 100
 
     #### *** If inputs.build-test == 'build' *** ####
     - name: Set Version Number based on Date and build number
       if: ${{ inputs.build-test == 'build' }}
       id: version
       run: |
-        echo BUILD_NUMBER=${{ github.run_number }} >> $GITHUB_OUTPUT
-        echo CURR_DATE=$(date +'%d%m%y') >> $GITHUB_OUTPUT
+        PATCH=$(date +'%d%m%y')
+        PATCH+=${{ github.run_number }}
+        echo VERSION_OUTPUT=1.0.$PATCH >> $GITHUB_OUTPUT
     
-    - name: Set Pom Version
+    - name: Set Pom version to generated version
       if: ${{ inputs.build-test == 'build' }}
-      run: mvn versions:set "-DnewVersion=1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}"
+      run: mvn versions:set "-DnewVersion=1.0.${{ steps.version.outputs.VERSION_OUTPUT }}"
 
     - name: Build Jar
       if: ${{ inputs.build-test == 'build' }}
@@ -130,9 +133,9 @@ jobs:
         -e -U -s ./.m2/settings.xml \
         -Denv=dev \
         -Dcrypto.key=${{ secrets.MULE_DEV_CRYPTO_KEY }} \
-        -DmuleDeploy.appArtifact=./target/mule-sample-project-1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-mule-application.jar
+        -DmuleDeploy.appArtifact=./target/mule-sample-project-${{ steps.version.outputs.VERSION_OUTPUT }}-mule-application.jar
 
-    - name: Get Jar Full File Name
+    - name: Get Jar File Path
       run: |
         echo "FILE_PATH=$(ls ./target/*.jar)" >> $GITHUB_OUTPUT
       id: file_properties
@@ -146,7 +149,7 @@ jobs:
     - name: Run JReleaser
       uses: jreleaser/release-action@v2
       env:
-        JRELEASER_PROJECT_VERSION: 1.0.${{ steps.version.outputs.CURR_DATE }}${{ steps.version.outputs.BUILD_NUMBER }}-SNAPSHOT
+        JRELEASER_PROJECT_VERSION: ${{ steps.version.outputs.VERSION_OUTPUT }}-SNAPSHOT
         JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       with:
         setup-java: false

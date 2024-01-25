@@ -6,10 +6,11 @@ on:
       GH_PAT: 
         required: true
     inputs:
-      early-access-name: 
+      early-access-tag-name: 
         description: Name of the early release tag name
         required: true
         type: string
+        default: 'early-access'
       version-to-release: 
         description: Name of the official release and tag after prod deployment
         required: true
@@ -20,6 +21,7 @@ jobs:
   create-tag-and-release:
     runs-on: ubuntu-latest
     steps:
+
 
     - name: Set up java 11+ (needed for jreleaser)
       uses: actions/setup-java@v3
@@ -37,7 +39,7 @@ jobs:
     - name: Get Jar file from early-release prereleasee
       uses: robinraju/release-downloader@v1.8
       with: 
-        tag: "${{ inputs.early-access-name}}"
+        tag: "${{ inputs.early-access-tag-name}}"
         fileName: "*.jar"
         tarBall: false
         zipBall: false
