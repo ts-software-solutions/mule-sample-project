@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mycompany</groupId>
+	<groupId>com.ts.software.solutions</groupId>
 	<artifactId>mule-sample-project</artifactId>
-	<version>1.0.0-${revision}</version>
+	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
 
 	<name>mule-sample-project</name>
@@ -15,14 +15,12 @@
 		<app.runtime>4.4.0-20230320</app.runtime>
 		<mule.maven.plugin.version>3.8.2</mule.maven.plugin.version>
 		<munit.version>2.3.14</munit.version>
+		<mule.deploy.plugin.version>1.2.0</mule.deploy.plugin.version>
 		<muleApplicationName>${project.artifactId}-v1-${mule.env}</muleApplicationName>
 		<revision>local</revision>
 		<artifactPath>dummy</artifactPath>
-		<mule.key>dummy</mule.key>
-        <connectedAppClientId>dummy</connectedAppClientId>
-        <connectedAppClientSecret>dummy</connectedAppClientSecret>
-	  	<anypointPlatformClientId>dummy</anypointPlatformClientId>
-	  	<anypointPlatformClientSecret>dummy</anypointPlatformClientSecret>
+		<crypto.key>dummy</crypto.key>
+		<env>dummy</env>
 	</properties>
 
 	<build>
@@ -39,26 +37,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<classifier>mule-application</classifier>
-				    <cloudHubDeployment>
-				      <uri>https://anypoint.mulesoft.com</uri>
-				      <muleVersion>${app.runtime}</muleVersion>
-				      <businessGroup>AVIO Sandbox</businessGroup>
-			          <connectedAppClientId>${connectedAppClientId}</connectedAppClientId>
-			          <connectedAppClientSecret>${connectedAppClientSecret}</connectedAppClientSecret>
-			          <connectedAppGrantType>client_credentials</connectedAppGrantType>
-				      <applicationName>${muleApplicationName}</applicationName>
-				      <artifact>${artifactPath}</artifact>
-				      <environment>${environment}</environment>
-				      <region>${region}</region>
-				      <workers>${workers}</workers>
-				      <workerType>${workerType}</workerType>
-					  <properties>
-					  	<mule.env>${mule.env}</mule.env>
-					  	<mule.key>${mule.key}</mule.key>
-					  	<anypoint.platform.client_id>${anypointPlatformClientId}</anypoint.platform.client_id>
-					  	<anypoint.platform.client_secret>${anypointPlatformClientSecret}</anypoint.platform.client_secret>
-					  </properties>
-				    </cloudHubDeployment>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -84,6 +62,20 @@
 					</coverage>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.avioconsulting.mule</groupId>
+                <artifactId>mule-deploy-maven-plugin</artifactId>
+                <version>${mule.deploy.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>		
 		</plugins>
 	</build>
 
@@ -91,7 +83,7 @@
 		<profile>
 			<id>DEV</id>
 			<properties>
-				<mule.env>DEV</mule.env>
+				<env>DEV</env>
 				<workers>1</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
@@ -101,7 +93,7 @@
 		<profile>
 			<id>UAT</id>
 			<properties>
-				<mule.env>UAT</mule.env>
+				<env>UAT</env>
 				<workers>1</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
@@ -111,7 +103,7 @@
 		<profile>
 			<id>PROD</id>
 			<properties>
-				<mule.env>PROD</mule.env>
+				<env>PROD</env>
 				<workers>2</workers>
 				<workerSize>MICRO</workerSize>
 				<region>us-east-2</region>
