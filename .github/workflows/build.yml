@@ -124,7 +124,7 @@ jobs:
     
     - name: Set Pom version to generated version
       if: ${{ inputs.build-test == 'build' }}
-      run: mvn versions:set "-DnewVersion=1.0.${{ steps.version.outputs.VERSION_OUTPUT }}"
+      run: mvn versions:set "-DnewVersion=${{ steps.version.outputs.VERSION_OUTPUT }}"
 
     - name: Build Jar
       if: ${{ inputs.build-test == 'build' }}
