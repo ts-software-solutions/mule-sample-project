@@ -17,9 +17,11 @@ on:
         required: true
     inputs:
       mule-env: 
-        description: The MuleSoft environment that the deployment will be deployed to
-        required: true
+        description: |
+          The MuleSoft environment that the deployment will be deployed to. Default is the current early-access release
+        required: false
         type: string
+        default: 'early-access'
       tag-name:
         description: The tag name used in the build stage so the release assets can be fetched
         required: true
