@@ -1,8 +1,13 @@
 name: Deployment Pipeline
 
 on:
-  # will kick off a build on any push. If it's a non-main branch then only tests will run
+  # will kick off a build on any push to the following patterns. If it's a non-main branch then only tests will run
   push:
+    branches:
+      - 'main'
+      - 'fix/*'
+      - 'feature/*'
+      - 'hotfix/*'
 
   # to kick off manually
   workflow_dispatch:
